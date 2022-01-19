@@ -6,6 +6,7 @@ import {
     Text,
     InputGroup,
     Colors,
+    ButtonGroup,
 } from '@blueprintjs/core'
 import { server } from '../config';
 
@@ -19,10 +20,10 @@ FocusStyleManager.onlyShowFocusOnTabs();
 
 import { createUseStyles } from 'react-jss'
 
-import { correctWordUpdate, incorrectWordUpdate } from './reducers'
-import { route } from 'next/dist/server/router';
+import { correctWordUpdate, incorrectWordUpdate, initTestState } from './reducers'
 
 const TOP_BAR_HEIGHT = '50px'
+const TEST_TIME = 60
 
 const wordToKey = (word: string, index: number) => {
     const strippedWord = word.replace('\'', '')
@@ -30,7 +31,6 @@ const wordToKey = (word: string, index: number) => {
 }
 
 const defaultWordStyle = {
-    // height: '40px',
     fontSize: '28px',
     padding: '10px',
     display: 'inline-flex',
@@ -38,27 +38,24 @@ const defaultWordStyle = {
 }
 
 const useStyles = createUseStyles({
+    topBar: {
+        TOP_BAR_HEIGHT
+    },
     typingTestContainer: {
         height: `calc(100%-${TOP_BAR_HEIGHT})`,
         width: '100%',
-    },
-    topBar: {
-        TOP_BAR_HEIGHT
     },
     wordsContainer: {
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        // height: '100%',
         width: '900px',
         height: '180px',
         margin: '0 auto',
         overflow: 'hidden',
-        // padding: '10px',
-        // paddingTop: '40px'
         marginTop: '10%'
     },
-    inputContainer: {
+    rowCentered: {
         width: '400px',
         margin: '0 auto',
         display: 'flex',
@@ -80,7 +77,6 @@ const useStyles = createUseStyles({
     },
     wordSelected: {
         ...defaultWordStyle,
-        // color: Colors.WHITE,
         backgroundColor: Colors.GRAY5,
         borderRadius: '5px'
     }
@@ -106,12 +102,16 @@ type typingTestProps = {
 
 type wordStatus = 'default' | 'selected' | 'correct' | 'incorrect'
 
+type Results = {
+    wpm: number
+}
+
 export type AppState = {
     wordMap: Record<string, {
         word: string,
         status: wordStatus
     }>,
-    inProgress: boolean,
+    firstWord: boolean,
     wordKey: string,
     index: number,
     correct: number,
@@ -121,13 +121,9 @@ export type AppState = {
 const typingTest: InferGetStaticPropsType<typeof getStaticProps> = (props: typingTestProps) => {
     const { words } = props
 
-
-    // console.log(words)
-    const classes = useStyles()
-
     const router = useRouter()
 
-    const defaultWordMap = useWordMap(words)
+    const classes = useStyles()
 
     const STYLE_MAP = {
         default: classes.word,
@@ -136,32 +132,80 @@ const typingTest: InferGetStaticPropsType<typeof getStaticProps> = (props: typin
         incorrect: classes.wordIncorrect,
     }
 
-    function initTestState(): AppState {
-        const first_key = Object.keys(defaultWordMap)[0]
-        return {
-            wordMap: {
-                ...defaultWordMap,
-                [first_key]: {
-                    ...defaultWordMap[first_key],
-                    status: 'selected'
-                }
-            },
-            inProgress: false,
-            wordKey: first_key,
-            index: 0,
-            correct: 0,
-            incorrect: 0,
-        }
+    const initWordMap = useWordMap(words)
+
+    const first_key = Object.keys(initWordMap)[0]
+    const APP_INIT_STATE: AppState = {
+        wordMap: {
+            ...initWordMap,
+            [first_key]: {
+                ...initWordMap[first_key],
+                status: 'selected'
+            }
+        },
+        firstWord: true,
+        wordKey: first_key,
+        index: 0,
+        correct: 0,
+        incorrect: 0,
     }
 
-    const [state, setState] = React.useState<AppState>(initTestState())
+    // app state
+    const [state, setState] = React.useState<AppState>(APP_INIT_STATE)
 
-    const [input, setInput] = React.useState('')
+    // input state
+    const [input, setInput] = React.useState<string>('')
+    const [isDisabled, setDisabled] = React.useState(false)
 
+    // results state
+    const [results, setResults] = React.useState<Results | null>(null)
+
+    // timer state
+    const timerIdRef = React.useRef<number | null>(null);
+    const [count, setCount] = React.useState(0);
+
+    // timer controls
+    const startTimer = () => {
+        if (timerIdRef.current) { return; }
+        timerIdRef.current = setInterval(() => setCount(c => c + 1), 1000)
+    };
+    const stopTimer = () => {
+        clearInterval(timerIdRef.current);
+        timerIdRef.current = 0;
+    };
+
+    const showTestResults = () => {
+        const minutes = count / 60
+        setResults({
+            wpm: state.correct / minutes
+        })
+    }
+
+    // timer cleanup
     React.useEffect(() => {
-        const { wordMap, wordKey, index } = state
+        return () => clearInterval(timerIdRef.current);
+    }, []);
 
-        if (input.indexOf(' ') < 0) return // do nothing if no space
+    // timer update
+    React.useEffect(() => {
+        if (count === TEST_TIME) {
+            // test is complete
+            stopTimer()
+            showTestResults()
+            setDisabled(true)
+            setInput('')
+        }
+    }, [count])
+
+    // input update
+    React.useEffect(() => {
+        if (input.indexOf(' ') < 0) return // do nothing if no space is present
+
+        const { wordMap, wordKey, index, firstWord } = state
+
+        if (firstWord) {
+            startTimer()
+        }
 
         const strippedInput = input.replace(/\s+/g, '')
         const word = wordMap[state.wordKey].word
@@ -175,12 +219,35 @@ const typingTest: InferGetStaticPropsType<typeof getStaticProps> = (props: typin
             setInput('')
             setState(incorrectWordUpdate(wordKey, index))
         }
-
     }, [input, state])
 
+
+    // scroll effect to move next line of words into view
     React.useEffect(() => {
         document.querySelector(`div#${state.wordKey}`)?.scrollIntoView()
     }, [state])
+
+
+    // results display component
+    type ResultsDisplayProps = {
+        showResults: boolean
+    }
+
+    function ResultsDisplay(props: ResultsDisplayProps) {
+        const { showResults } = props
+        if (showResults) {
+            return (
+                <div className={classes.rowCentered}>
+                    <Text style={{ margin: '0 auto' }}
+                        tagName='h3'>
+                        {`${results ? results.wpm : ''}wpm`}
+                    </Text>
+                </div>
+
+            )
+        }
+        return <div></div>
+    }
 
     return (
         <div className={classes.typingTestContainer}>
@@ -214,27 +281,76 @@ const typingTest: InferGetStaticPropsType<typeof getStaticProps> = (props: typin
                 }
             </div>
 
-            <div className={classes.inputContainer}>
+            <div className={classes.rowCentered}>
                 <InputGroup
                     className={classes.textInput}
                     value={input}
-                    fill={true}
-                    large={true}
+                    disabled={isDisabled}
                     onChange={(e) => {
-                        // console.log(e.target.value)
                         setInput(e.target.value)
                     }}
+                    fill
+                    large
                 />
-                {/* <Button
-                    style={{ width: '80px' }}
-                    text={'Start'}
+                <Button
+                    style={{ width: '70px' }}
+                    icon='reset'
                     intent='primary'
-                /> */}
+                    onClick={() => {
+                        setCount(0)
+                        setInput('')
+                        setState(initTestState(initWordMap))
+                        setResults(null)
+                        setDisabled(false)
+                    }}
+                />
             </div>
 
-            <h1>
-                {JSON.stringify(state.correct)}
-            </h1>
+            {/* divider */}
+            <div style={{ height: '20px' }} />
+
+            <div className={classes.rowCentered}>
+                <ButtonGroup style={{ margin: '0 auto' }}>
+                    {/* empty button to affect blue print js styling */}
+                    <Button style={{ display: 'none' }} />
+                    <Button
+                        intent='success'
+                        text={JSON.stringify(state.correct)}
+                        style={{ pointerEvents: 'none' }}
+                        large
+                        minimal
+                        outlined
+                    />
+                    <Button
+                        intent='danger'
+                        text={JSON.stringify(state.incorrect)}
+                        style={{ pointerEvents: 'none', marginLeft: '5px' }}
+                        large
+                        minimal
+                        outlined
+                    />
+                    {/* empty button to affect blue print js styling */}
+                    <Button style={{ display: 'none' }} />
+                </ButtonGroup>
+            </div>
+
+            {/* divider */}
+            <div style={{ height: '20px' }} />
+
+            <div className={classes.rowCentered}>
+                <ButtonGroup style={{ margin: '0 auto' }}>
+                    <Button
+                        text={`${count}s`}
+                        large
+                        minimal
+                    />
+                </ButtonGroup>
+            </div>
+
+            {/* divider */}
+            <div style={{ height: '20px' }} />
+
+            <ResultsDisplay showResults={(results ? true : false)}></ResultsDisplay>
         </div>
     )
 }

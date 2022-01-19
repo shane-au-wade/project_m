@@ -33,6 +33,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <meta name='viewport' content="width=device-width,initial-scale=1"/>
           <link rel="icon" href="link to favicon" />
           <link href="link to font" rel="stylesheet"/>
         </Head>
