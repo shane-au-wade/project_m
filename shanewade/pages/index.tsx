@@ -1,9 +1,5 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
-
-
-import { server } from '../config';
 
 // Setup Blueprint
 import '@blueprintjs/core/lib/css/blueprint.css'
@@ -15,14 +11,9 @@ import { FocusStyleManager } from "@blueprintjs/core";
 FocusStyleManager.onlyShowFocusOnTabs();
 
 import {
-  Button,
   Card,
-  Elevation,
-  Menu,
-  MenuItem,
-  MenuDivider
+  Button,
 } from '@blueprintjs/core'
-import { Popover2 } from "@blueprintjs/popover2";
 
 import { createUseStyles } from 'react-jss'
 
@@ -36,11 +27,13 @@ const useStyles = createUseStyles({
     flexDirection: 'column',
     height: '100%',
     width: '80%',
-    margin: '0 auto'
+    margin: '0 auto',
+
   },
   cardContainerRow: {
     display: 'flex',
     flexDirection: 'row',
+    flexWrap: 'wrap'
   },
   card: {
     flex: 'grow',
@@ -53,27 +46,15 @@ const useStyles = createUseStyles({
 const cardData = [
   {
     title: "about",
-    href: '/about'
+    href: '/about',
+    icon: 'bookmark'
   },
   {
-    title: "typing",
-    href: '/typingTest'
-  },
-  {
-    title: "blog",
-    href: '/blog'
-  },
-  {
-    title: "blog",
-    href: '/blog',
-  },
-  {
-    title: "map",
-    href: '/map',
-  },
+    title: "Typing Test",
+    href: '/typingTest',
+    icon: 'citation'
+  }
 ]
-
-
 
 const Home: NextPage = () => {
   const classes = useStyles()
@@ -81,22 +62,8 @@ const Home: NextPage = () => {
 
   return (
     <div className={classes.app}>
-
       <div className={classes.cardContainer}>
-        <Button
-
-          onClick={async () => {
-            const hello_json = await (await fetch('api/hello')).json()
-            console.log(hello_json)
-          }}
-        >
-
-          next api test
-        </Button>
         <div className={classes.cardContainerRow}>
-
-
-
           {
           cardData.map((card) => {
             return <Card
@@ -107,23 +74,17 @@ const Home: NextPage = () => {
                 router.push(card.href)
               }}
             >
-              <h4>{card.title}</h4>
-
-              <h1 className="title">
-                Read{' '}
-                <Link href={card.href}>
-                  <a>this page!</a>
-                </Link>
-              </h1>
-
+              <Button
+               minimal
+               large
+               text={card.title}
+               icon={card.icon}
+               />
             </Card>
-
           })
           }
-
         </div>
       </div>
-
     </div>
   )
 }
