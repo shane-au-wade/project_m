@@ -6,13 +6,14 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { SheetsRegistry, JssProvider, createGenerateId } from "react-jss";
 class MyDocument extends Document {
-  static async getInitialProps(ctx) {
+  static async getInitialProps(ctx:any) {
     const registry = new SheetsRegistry();
     const generateId = createGenerateId();
     const originalRenderPage = ctx.renderPage;
     ctx.renderPage = () =>
       originalRenderPage({
-        enhanceApp: (App) => (props) => (
+        // eslint-disable-next-line react/display-name
+        enhanceApp: (App:any) => (props:any) => (
           <JssProvider registry={registry} generateId={generateId}>
             <App {...props} />
           </JssProvider>
@@ -45,4 +46,4 @@ class MyDocument extends Document {
     );
   }
 }
-export default MyDocument;
+export default MyDocument

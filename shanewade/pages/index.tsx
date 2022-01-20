@@ -43,7 +43,13 @@ const useStyles = createUseStyles({
   }
 })
 
-const cardData = [
+type HomePageCard = {
+  title: string,
+  href: string,
+  icon: string,
+}
+
+const cardData: Array<HomePageCard> = [
   {
     title: "about",
     href: '/about',
@@ -65,11 +71,11 @@ const Home: NextPage = () => {
       <div className={classes.cardContainer}>
         <div className={classes.cardContainerRow}>
           {
-          cardData.map((card) => {
+          cardData.map((card, index) => {
             return <Card
               className={classes.card}
               interactive={true}
-              // elevation={Elevation.TWO}
+              key={index}
               onClick={() => {
                 router.push(card.href)
               }}

@@ -6,7 +6,7 @@
 // correct: 0,
 // incorrect: 0,
 
-import type { AppState } from './index'
+import type { AppState } from '../../pages/typingTest/index'
 
 export type Reducer = (arg0: AppState) => AppState
 
