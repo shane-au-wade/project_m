@@ -35,6 +35,16 @@ const useStyles = createUseStyles({
             fontSize: '.25em',
         }
     },
+    '@media screen and (max-width: 500px)': {
+        fig: {
+            fontSize: '5px',
+        }
+    },
+    '@media screen and (max-width: 450px)': {
+        fig: {
+            fontSize: '4px',
+        }
+    },
     '@media screen and (max-width: 300px)': {
         fig: {
             fontSize: '.20em',
@@ -43,7 +53,7 @@ const useStyles = createUseStyles({
 })
 
 const in_progress = String.raw
-`
+    `
                   ___                    ___         ___           ___           ___           ___           ___           ___           ___
     ___          /__/\                  /  /\       /  /\         /  /\         /  /\         /  /\         /  /\         /  /\         /  /\
    /  /\         \  \:\                /  /::\     /  /::\       /  /::\       /  /:/_       /  /::\       /  /:/_       /  /:/_       /  /:/_
@@ -71,11 +81,11 @@ const AboutPage: NextPage = () => {
             green: g,
             blue: b,
         }
-    },[])
+    }, [])
 
     // in action
     const INIT_COLOR: rgb = { red: 0, green: 0, blue: 0 }
-    const INIT_END_COLOR: rgb = { red: 70, green: 217, blue: 227}
+    const INIT_END_COLOR: rgb = { red: 70, green: 217, blue: 227 }
     const FADE_INTERVAL = 3000
 
     const [state, setState] = React.useState<rgb>(INIT_COLOR)
@@ -103,16 +113,15 @@ const AboutPage: NextPage = () => {
             const g = lerp(start.green, end.green, u)
             const b = lerp(start.blue, end.blue, u)
             u += step_u
-
-            // el.style.setProperty(property, colorname);
-            const new_color:rgb = { red: r, green: g, blue: b }
+            1
+            const new_color: rgb = { red: r, green: g, blue: b }
             setState(new_color)
         }, interval);
     }
 
     React.useEffect(() => {
         fade(INIT_COLOR, INIT_END_COLOR, FADE_INTERVAL)
-    },[])
+    }, [])
 
     return (
         <div className={classes.container}>
