@@ -1,14 +1,13 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 
-// Setup Blueprint
+// <Setup Blueprint>
 import '@blueprintjs/core/lib/css/blueprint.css'
 import '@blueprintjs/icons/lib/css/blueprint-icons.css'
 import '@blueprintjs/popover2/lib/css/blueprint-popover2.css'
-
-// Turn off focus styling for blueprint components
 import { FocusStyleManager } from "@blueprintjs/core";
 FocusStyleManager.onlyShowFocusOnTabs();
+// <Setup Blueprint>
 
 import {
   Card,
@@ -59,6 +58,11 @@ const cardData: Array<HomePageCard> = [
     title: "Typing Test",
     href: '/typingTest',
     icon: 'citation'
+  },
+  {
+    title: "Animation",
+    href: '/animation',
+    icon: 'draw'
   }
 ]
 
@@ -69,7 +73,7 @@ const Home: NextPage = () => {
   return (
     <div className={classes.app}>
       <div className={classes.cardContainer}>
-        <div className={classes.cardContainerRow}>
+        <div id='test' className={classes.cardContainerRow}>
           {
           cardData.map((card, index) => {
             return <Card
