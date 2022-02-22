@@ -8,7 +8,6 @@ import {
     Colors,
     ButtonGroup,
 } from '@blueprintjs/core'
-import { server } from '../../public/config';
 
 // Setup Blueprint
 import '@blueprintjs/core/lib/css/blueprint.css'

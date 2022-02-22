@@ -63,6 +63,11 @@ const cardData: Array<HomePageCard> = [
     title: "Animation",
     href: '/animation',
     icon: 'draw'
+  },
+  {
+    title: "SF Bike Lanes",
+    href: '/bikeLanes',
+    icon: 'cycle'
   }
 ]
 
