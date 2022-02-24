@@ -13,16 +13,16 @@ type BikeLaneMap = {
 }
 
 
-function parseLatLngs (text: string) {
+function parseLatLngs(text: string) {
     const lng_lat_strings = text?.replace('LINESTRING', '')
-                         ?.replace( '(', '')
-                         ?.replace( ')', '')
-                         ?.trim()
-                         ?.split(',') ?? []
+        ?.replace('(', '')
+        ?.replace(')', '')
+        ?.trim()
+        ?.split(',') ?? []
     const lat_lngs: Array<[number, number]> = lng_lat_strings.map((lng_lat_str) => {
         lng_lat_str = lng_lat_str.trim()
         const lng_lat = lng_lat_str.split(' ')
-        return [ Number(lng_lat[1]), Number(lng_lat[0] ) ]
+        return [Number(lng_lat[1]), Number(lng_lat[0])]
     })
     return lat_lngs
 }
