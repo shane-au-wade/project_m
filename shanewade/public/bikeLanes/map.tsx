@@ -3,8 +3,12 @@ import { createUseStyles } from 'react-jss'
 
 import * as L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import * as leafletHeatmap from 'leaflet-heatmap'
 
 import { useBikeLaneDisplay } from './bikeLaneDisplay'
+import { useCollisionsDisplay } from './collisionsDisplay'
+
+import type * as geojson from 'geojson'
 
 const useStyles = createUseStyles({
 
@@ -31,15 +35,20 @@ type BikeLaneMap = {
 
 export default function map(props: {
     bikeLaneMap: BikeLaneMap
+    collisionsData: geojson.FeatureCollection
 }) {
 
-    const { bikeLaneMap } = props
+    const { bikeLaneMap, collisionsData } = props
 
     const classes = useStyles()
 
     const mapContainerRef = React.useRef<HTMLDivElement>()
 
     const [map, setMap] = React.useState<L.Map | null>(null)
+
+    const [collisionsHeatMap, setCollisionsHeatMap] = React.useState<leafletHeatmap | null>(null)
+
+    const [layerControl, setLayerControl] = React.useState<L.Control | null>(null)
 
     React.useEffect(() => {
         const osm = L.tileLayer(
@@ -60,10 +69,32 @@ export default function map(props: {
             }
         )
 
+        const cfg = {
+            // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+            // if scaleRadius is false it will be the constant radius used in pixels
+            "radius": 10,
+            "maxOpacity": .8,
+            // scales the radius based on map zoom
+            "scaleRadius": false,
+            // if set to false the heatmap uses the global maximum for colorization
+            // if activated: uses the data maximum within the current map boundaries
+            //   (there will always be a red spot with useLocalExtremas true)
+            "useLocalExtrema": true,
+            // which field name in your data represents the latitude - default "lat"
+            latField: 'lat',
+            // which field name in your data represents the longitude - default "lng"
+            lngField: 'lng',
+            // which field name in your data represents the data value - default "value"
+            valueField: 'count'
+        };
+
+        const _collisionsHeatmap = new leafletHeatmap(cfg);
+
+
         const _map = L.map(mapContainerRef.current, {
             center: STARTING_LOCATION,
             zoom: 13,
-            layers: [stamen_toner, osm]
+            layers: [stamen_toner, osm, _collisionsHeatmap]
         });
 
         const baseMaps = {
@@ -71,15 +102,37 @@ export default function map(props: {
             "Open Street Map": osm,
         };
 
-        L.control.layers(baseMaps).addTo(_map);
+        const mapOverlays = {
+            "Collisions Heat Map": _collisionsHeatmap
+        }
+
+        var testData = {
+            max: 8,
+            data: [{ lat: 24.6408, lng: 46.7728, count: 1 }, { lat: 50.75, lng: -1.55, count: 1 }]
+        };
+
+        console.log(_collisionsHeatmap)
+
+        _collisionsHeatmap.setData(testData)
+
+        const _layer_control = L.control.layers(baseMaps, mapOverlays, {
+            collapsed: false,
+        }).addTo(_map);
+
+        _layer_control.expand()
 
         setMap(_map)
+        setCollisionsHeatMap(_collisionsHeatmap)
+        setLayerControl(_layer_control)
     }, [mapContainerRef])
 
     React.useEffect(() => {
         if (map === null) return
-        useBikeLaneDisplay(map, bikeLaneMap)
-    }, [map])
+        if (collisionsHeatMap === null) return
+        if (layerControl === null) return
+        useBikeLaneDisplay(map, bikeLaneMap, layerControl)
+        useCollisionsDisplay(map, collisionsData, collisionsHeatMap, layerControl)
+    }, [map, collisionsHeatMap, layerControl])
 
     return (
         <div id="mapContainer"

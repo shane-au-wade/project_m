@@ -168,7 +168,7 @@
   "resolved" "https://registry.npmjs.org/@types/dom4/-/dom4-2.0.2.tgz"
   "version" "2.0.2"
 
-"@types/geojson@*":
+"@types/geojson@*", "@types/geojson@^7946.0.8":
   "integrity" "sha512-1rkryxURpr6aWP7R786/UQOkJ3PcpQiWkAXBmdWc7ryFWqN6a4xfK7BtjXvFBKO9LjQ+MWQSWxYeZX1OApnArA=="
   "resolved" "https://registry.npmjs.org/@types/geojson/-/geojson-7946.0.8.tgz"
   "version" "7946.0.8"
@@ -972,6 +972,16 @@
   dependencies:
     "function-bind" "^1.1.1"
 
+"heatmap.js@*":
+  "integrity" "sha1-Rm07hlE/XUkRKknSVwCrJzAUkVM="
+  "resolved" "https://registry.npmjs.org/heatmap.js/-/heatmap.js-2.0.5.tgz"
+  "version" "2.0.5"
+
+"heatmapjs@^2.0.2":
+  "integrity" "sha1-R2Pe5vyf95Td4guNsCjCBP9r7Ic="
+  "resolved" "https://registry.npmjs.org/heatmapjs/-/heatmapjs-2.0.2.tgz"
+  "version" "2.0.2"
+
 "hoist-non-react-statics@^3.2.0", "hoist-non-react-statics@^3.3.0":
   "integrity" "sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw=="
   "resolved" "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz"
@@ -1327,7 +1337,15 @@
   dependencies:
     "language-subtag-registry" "~0.3.2"
 
-"leaflet@^1.7.1":
+"leaflet-heatmap@^1.0.0":
+  "integrity" "sha1-g8wEJJ057ZFSauqn12ab2qhtax8="
+  "resolved" "https://registry.npmjs.org/leaflet-heatmap/-/leaflet-heatmap-1.0.0.tgz"
+  "version" "1.0.0"
+  dependencies:
+    "heatmap.js" "*"
+    "leaflet" "*"
+
+"leaflet@*", "leaflet@^1.7.1":
   "integrity" "sha512-/xwPEBidtg69Q3HlqPdU3DnrXQOvQU/CCHA1tcDQVzOwm91YMYaILjNp7L4Eaw5Z4sOYdbBz6koWyibppd8Zqw=="
   "resolved" "https://registry.npmjs.org/leaflet/-/leaflet-1.7.1.tgz"
   "version" "1.7.1"

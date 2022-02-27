@@ -49,9 +49,11 @@ function styleLane(lane: BikeLane) {
 
 export function useBikeLaneDisplay(
     map: L.Map,
-    bikeLaneMap: BikeLaneMap
+    bikeLaneMap: BikeLaneMap,
+    layerControl: L.Control,
 ) {
     const bike_lanes = bikeLaneMap.bike_lanes
+    const bike_lane_layers = new L.LayerGroup()
     Object.keys(bike_lanes).forEach((group_id: number) => {
         bike_lanes[group_id].forEach((lane: BikeLane) => {
             const style = styleLane(lane)
@@ -67,9 +69,10 @@ export function useBikeLaneDisplay(
                 const style = styleLane(lane)
                 polyline.setStyle({ ...style, weight: 2 })
             })
-
-            polyline.addTo(map)
+            bike_lane_layers.addLayer(polyline)
+            // polyline.addTo(map)
         })
     })
-
+    layerControl.addOverlay(bike_lane_layers, 'Bike Lane Network')
+    bike_lane_layers.addTo(map)
 }

@@ -8,6 +8,10 @@ import * as fs from 'fs'
 
 import { useBikeLaneMap } from '../../public/bikeLanes/bikeLaneMap'
 
+import collisionsDataJson from '../../public/transbase_collisions_02262022.json'
+
+import type * as geojson from 'geojson'
+
 const Map = dynamic(() => import('../../public/bikeLanes/map'), { ssr: false });
 
 const useStyles = createUseStyles({
@@ -71,10 +75,14 @@ const BikeLaneMapPage: NextPage = (props: Props) => {
     const classes = useStyles()
     const { bikeLaneMapData } = props
     const bike_lane_map: BikeLaneMap = useBikeLaneMap(bikeLaneMapData)
+    const collisionsDataGeojson: geojson.FeatueCollection = collisionsDataJson
 
     return (
         <div className={classes.container}>
-            <Map bikeLaneMap={bike_lane_map}></Map>
+            <Map
+                bikeLaneMap={bike_lane_map}
+                collisionsData={collisionsDataGeojson}
+            ></Map>
         </div>
     )
 }
@@ -84,9 +92,11 @@ export default BikeLaneMapPage
 export const getStaticProps: GetStaticProps = async (context) => {
     const data_path = path.join(process.cwd(), 'public/bikewaynetwork.csv')
     const file_contents = fs.readFileSync(data_path, 'utf8')
+
     return {
         props: {
-            bikeLaneMapData: file_contents
+            bikeLaneMapData: file_contents,
+            // bikeCollisionData: collisions_data
         }, // will be passed to the page component as props
     }
 }
