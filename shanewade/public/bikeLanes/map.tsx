@@ -94,7 +94,8 @@ export default function map(props: {
         const _map = L.map(mapContainerRef.current, {
             center: STARTING_LOCATION,
             zoom: 13,
-            layers: [stamen_toner, osm, _collisionsHeatmap]
+            layers: [stamen_toner, osm, _collisionsHeatmap],
+            preferCanvas: true
         });
 
         const baseMaps = {
