@@ -8,7 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@blueprintjs/core": "^3.52.0",
+    "@blueprintjs/core": "^4.18.0",
     "@blueprintjs/popover2": "^0.12.9",
     "heatmapjs": "^2.0.2",
     "leaflet": "^1.7.1",

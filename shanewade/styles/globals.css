@@ -23,6 +23,10 @@ a {
  --duration_ms: 50s
 }
 
+#__next {
+  height: 100%;
+  width: 100%;
+}
 /*  animation: name duration timing-function delay iteration-count direction fill-mode; */
 /* .rgb_background_color {
     --name: backgrouncolor-change;

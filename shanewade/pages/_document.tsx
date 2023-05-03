@@ -32,12 +32,18 @@ class MyDocument extends Document {
   }
   render() {
     return (
-      <Html>
+      <Html style={{
+        height: '100%',
+        width: '100%'
+      }}>
         <Head>
           <link rel="icon" href="/cube.svg" />
         </Head>
-        <body>
-          <Main />
+        <body style={{
+          height: '100%',
+          width: '100%'
+        }}>
+          <Main/>
           <NextScript />
         </body>
       </Html>
