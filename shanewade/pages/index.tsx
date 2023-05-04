@@ -65,12 +65,50 @@ const cardData: Array<HomePageCard> = [
 ]
 
 const projects = [
-  { title: 'My electric longboards', href: '' },
-  { title: 'My electric bikes', href: '' },
-  { title: 'The electric motorcycle failure', href: '' },
-  { title: 'The 2 stroke pivot: vintage mopeds', href: '' },
-  { title: 'Bob Ross Night!', href: '' },
-  { title: 'AI Auction House', href: '' },
+  {
+    title: 'My electric longboard jounrey',
+    href: '',
+    image:
+      'https://lh3.googleusercontent.com/pw/AJFCJaXAPCjl-Svlvw1HcLY_XvXbRGtEWu2HWo5ruRqHHqNPbv3-ooRGcCEB0Rz_99F4gzifbG85tsi8ye-cW8e4MOnK9H-kEcaHK1NFOnKlHkLHlcQ_97bcZKtJrc3jCbTIvuO8cqw9wdTq0-uHQq0gzWd5=w1716-h1145-s-no?authuser=1',
+    description:
+      'Electric longboards are the closest thing that we have to hoverboards.  I rode my boards everywhere and met some very interesting people along the way.',
+  },
+  {
+    title: 'Electric bikes',
+    href: '',
+    image:
+      'https://lh3.googleusercontent.com/pw/AJFCJaU3vl-7x6HDbJ0zeAGizM1xbIpwzcjn_UKGJKdgpkHBTXyJPScCLOECWLnzGLaD-I0D8oDaLwbROEgLz1nPd7f3pTlYs8_CcMQBVh8ODwtzpBvIt1UxZRpJf3UYdQjoHqAcyLg_kA-aYBwdFYCkn-RV=w1716-h1287-s-no?authuser=1',
+    description: "Maybe you do want mechanical brakes when you're bombing a hill?",
+  },
+  {
+    title: 'The electric motorcycle failure',
+    href: '',
+    image:
+      'https://lh3.googleusercontent.com/pw/AJFCJaWtaVFW3u_f1A4lv88M8mOE4v9yXGz7O9IsI4_H44minjvQFXSKn-ZRcYJkDrj8Yl31yWzwVgMcdscgzlTAgAbUzcH8KOGWBBkArzz8BBwqfEm9kCIXNz7ywGwkWiX4xiFRdrervDnwA2rSUB7fR4l7=w1716-h1287-s-no?authuser=1',
+    description: 'Of course I had to keep my electric vehicle journey going, the obvious next step was a motorcycle',
+  },
+  {
+    title: 'The 2 stroke pivot: vintage mopeds',
+    href: '',
+    image:
+      'https://lh3.googleusercontent.com/pw/AJFCJaXgnFm-1mhCsLEmuDVs-Ydqo8FtzLgBr4U6nET8D7mBBc0BBk3lkq7JGjD0NKVpRcmIwt9VCbIFQ5dtR0Pz4UUxrVFCLYK7fmfcyNLbx_RyC6Grugbv4MDqBzfW1mBCrYtBwpvVaaTDhk2S-ZItG3g4=w1716-h1287-s-no?authuser=1',
+    description:
+      "I learned a few good lessons from the electric motorcycle project.  I wasn't ready to give up on my two-wheel-dreams so I pivoted to 2-stroke mopeds. *BRAAAAPPPPPP",
+  },
+  {
+    title: 'Bob Ross Night!',
+    href: '',
+    image:
+      'https://lh3.googleusercontent.com/pw/AJFCJaXRXH2M4Nu9FB0Q6sLxgtGPhHokDaPoV8KxBtfxhg0otSZZXODsgJoXXuNZSeWUpkkv0uWn0X0s9_fTAaEBS0elhzOy5v0ZqecW9uspbnpX-l14bLjvV-6RNClyaZs0PM-bFaoeaNFKiYYMa8vfPTP8=w640-h480-s-no?authuser=1',
+    description: "We're going to need a bigger easel...",
+  },
+  {
+    title: 'AI Auction House',
+    href: '',
+    image:
+      'https://lh3.googleusercontent.com/pw/AJFCJaVm4zsTNb00v1dGJqt7T-fqps2PGBc3arQ0ihKTY8ulA0WnFtS_6k-nu2Myhhb6If-9-yZH1hSLQLvrLkxbgD9sHTHEO_4kVRs8nZWMP6fpLOQoq9O2FJ_djUMmghBsQD3X6GSvg5sbpgPoeUpU2dKX=w512-h512-s-no?authuser=1',
+    description: 'An intro experience to the monetization of generative AI',
+  },
 ]
 
 const blog_posts = [
@@ -155,9 +193,10 @@ const Home: NextPage = () => {
           />
         </a>
       </div>
+
       <div style={{ padding: '1rem' }}>
         <h2>Blog Posts</h2>
-        <section style={{ display: 'inline-flex', gap: '1rem', flexWrap: 'wrap' }}>
+        <section style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '1rem' }}>
           {blog_posts.map((post, index) => (
             <Card
               key={index}
@@ -184,8 +223,30 @@ const Home: NextPage = () => {
         </section>
 
         <h2>Projects</h2>
-        <section>
-          {/* <img src="https://lh3.googleusercontent.com/pw/AJFCJaWtaVFW3u_f1A4lv88M8mOE4v9yXGz7O9IsI4_H44minjvQFXSKn-ZRcYJkDrj8Yl31yWzwVgMcdscgzlTAgAbUzcH8KOGWBBkArzz8BBwqfEm9kCIXNz7ywGwkWiX4xiFRdrervDnwA2rSUB7fR4l7=w1716-h1287-s-no?authuser=0"></img> */}
+        <section style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '1rem' }}>
+          {projects.map((post, index) => (
+            <Card
+              key={index}
+              interactive
+              onClick={() => {
+                window.open(post.href, '_blank')
+              }}
+              style={{
+                maxWidth: '25rem',
+                textAlign: 'center',
+              }}
+            >
+              <img
+                alt={`${post.title}, main image`}
+                src={post.image}
+                style={{ height: '15rem', borderRadius: '7px' }}
+              />
+              <summary style={{ textAlign: 'left' }}>
+                <h3>{post.title}</h3>
+                <p>{post.description}</p>
+              </summary>
+            </Card>
+          ))}
         </section>
         <h2>Prototypes</h2>
         <h2>Products</h2>
