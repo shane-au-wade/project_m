@@ -9,12 +9,14 @@ import '@blueprintjs/popover2/lib/css/blueprint-popover2.css'
 import { FocusStyleManager } from '@blueprintjs/core'
 FocusStyleManager.onlyShowFocusOnTabs()
 
-import { Card, Button } from '@blueprintjs/core'
+import { Card, Button, Icon } from '@blueprintjs/core'
 
 import { createUseStyles } from 'react-jss'
 
 const useStyles = createUseStyles({
-  app: {},
+  app: {
+    backgroundImage: 'linear-gradient(whitesmoke, white)',
+  },
   cardContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -109,7 +111,7 @@ const projects = [
       'https://lh3.googleusercontent.com/pw/AJFCJaVm4zsTNb00v1dGJqt7T-fqps2PGBc3arQ0ihKTY8ulA0WnFtS_6k-nu2Myhhb6If-9-yZH1hSLQLvrLkxbgD9sHTHEO_4kVRs8nZWMP6fpLOQoq9O2FJ_djUMmghBsQD3X6GSvg5sbpgPoeUpU2dKX=w512-h512-s-no?authuser=1',
     description: 'An intro experience to the monetization of generative AI',
   },
-]
+].reverse()
 
 const blog_posts = [
   {
@@ -177,6 +179,8 @@ const Home: NextPage = () => {
             boxShadow: 'rgb(38, 57, 77) 0px 20px 30px -10px',
           }}
         />
+        <br />
+        <br />
         <h1>Shane Wade</h1>
         <p>Engineer and AI Mechanic 🔧 🤖</p>
         <br />
@@ -194,9 +198,13 @@ const Home: NextPage = () => {
         </a>
       </div>
 
+      {/* page content container  */}
       <div style={{ padding: '1rem' }}>
+        <h2 style={{ marginTop: '0' }}>Products</h2>
+        <a>ImmigrationGPT</a>
+
         <h2>Blog Posts</h2>
-        <section style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '1rem' }}>
+        <section style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '2rem' }}>
           {blog_posts.map((post, index) => (
             <Card
               key={index}
@@ -214,8 +222,11 @@ const Home: NextPage = () => {
                 src={post.image}
                 style={{ height: '15rem', borderRadius: '7px' }}
               />
+              <br />
+              <br />
               <summary style={{ textAlign: 'left' }}>
                 <h3>{post.title}</h3>
+                <br />
                 <p>{post.description}</p>
               </summary>
             </Card>
@@ -223,7 +234,7 @@ const Home: NextPage = () => {
         </section>
 
         <h2>Projects</h2>
-        <section style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '1rem' }}>
+        <section style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '2rem' }}>
           {projects.map((post, index) => (
             <Card
               key={index}
@@ -236,22 +247,232 @@ const Home: NextPage = () => {
                 textAlign: 'center',
               }}
             >
-              <img
-                alt={`${post.title}, main image`}
-                src={post.image}
-                style={{ height: '15rem', borderRadius: '7px' }}
-              />
+              <img alt={`${post.title}, main image`} src={post.image} style={{ width: '15rem', borderRadius: '7px' }} />
+              <br />
+              <br />
               <summary style={{ textAlign: 'left' }}>
                 <h3>{post.title}</h3>
+                <br />
                 <p>{post.description}</p>
               </summary>
             </Card>
           ))}
         </section>
         <h2>Prototypes</h2>
-        <h2>Products</h2>
-        <a>ImmigrationGPT</a>
-        <h2>Recommendations</h2>
+        <section style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '2rem' }}>
+          <Card
+            style={{
+              maxWidth: '25rem',
+              textAlign: 'center',
+              minWidth: '18rem',
+            }}
+          >
+            {/* <img alt={`${post.title}, main image`} src={post.image} style={{ width: '15rem', borderRadius: '7px' }} /> */}
+            <summary style={{ textAlign: 'left' }}>
+              <h3>Do Work Faster (w/ AI)</h3>
+              <br />
+              <p>
+                AI hustlers are already puting ChatGPT to work. They are opening up a few browser windows and flexing
+                their &quot;copy & paste&quot; skills
+              </p>
+              <p>Why are these tools so spread out?</p>
+              <p>What if there was a single portal that brought your work + generative AI tools together.</p>
+            </summary>
+            <br />
+            <figure
+              style={{
+                outline: '1px gray solid',
+                borderRadius: '7px',
+                padding: '7px',
+                backgroundColor: 'whitesmoke',
+                width: '100%',
+                margin: 0,
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '4px',
+                  marginBottom: '7px',
+                }}
+              >
+                <div style={{ background: 'green', height: '10px', width: '10px', borderRadius: '10px' }} />
+                <div style={{ background: 'orange', height: '10px', width: '10px', borderRadius: '10px' }} />
+                <div style={{ background: 'red', height: '10px', width: '10px', borderRadius: '10px' }} />
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                }}
+              >
+                <div
+                  style={{
+                    backgroundColor: 'lightgray',
+                    height: '10rem',
+                    width: '50%',
+                    borderRadius: '7px',
+                    display: 'grid',
+                  }}
+                >
+                  <strong
+                    style={{
+                      alignSelf: 'center',
+                    }}
+                  >
+                    Your Work
+                  </strong>
+                </div>
+                <div style={{ width: '7px' }} />
+                <div
+                  style={{
+                    backgroundColor: 'lightblue',
+                    height: '10rem',
+                    width: '50%',
+                    borderRadius: '7px',
+                    display: 'grid',
+                  }}
+                >
+                  <strong
+                    style={{
+                      alignSelf: 'center',
+                    }}
+                  >
+                    Your AI Tools
+                  </strong>
+                </div>
+              </div>
+            </figure>
+            <br />
+            <Button
+              text="Check it out"
+              intent="primary"
+              onClick={() => {
+                router.push('/doworkfaster')
+              }}
+            ></Button>
+          </Card>
+          <Card
+            style={{
+              maxWidth: '25rem',
+              minWidth: '18rem',
+              textAlign: 'center',
+            }}
+          >
+            <summary style={{ textAlign: 'left' }}>
+              <h3>SF Bike Lane Viz</h3>
+              ___
+              <Icon icon="cycle" />
+              ______________
+            </summary>
+          </Card>
+          <Card
+            style={{
+              maxWidth: '25rem',
+              minWidth: '18rem',
+              textAlign: 'center',
+            }}
+          >
+            <summary style={{ textAlign: 'left' }}>
+              <h3>Typing Test</h3>
+              <br />
+              <p>
+                I&apos;ve always enjoyed mechanical keyboards and the experience they provide when typing. I really
+                enjoyed the typing tests that I found online like{' '}
+                <a href="https://10fastfingers.com/typing-test/english">10 Fast Fingers</a> and{' '}
+                <a href="https://play.typeracer.com/">Type Racer</a> so I decided to make my own typing test.
+              </p>
+            </summary>
+            <br />
+            <figure
+              style={{
+                outline: '1px solid gray',
+                width: '15rem',
+                padding: '1rem',
+                borderRadius: '0.5rem',
+                margin: '0 auto',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '0.5rem',
+                fontSize: '1.25rem',
+              }}
+            >
+              <div
+                style={{
+                  color: 'darkgreen',
+                  padding: '0.5rem',
+                }}
+              >
+                the
+              </div>
+              <div
+                style={{
+                  color: 'darkgreen',
+                  padding: '0.5rem',
+                }}
+              >
+                quick
+              </div>
+              <div
+                style={{
+                  color: 'darkred',
+                  padding: '0.5rem',
+                }}
+              >
+                brown
+              </div>
+              <div
+                style={{
+                  color: 'darkgreen',
+                  padding: '0.5rem',
+                }}
+              >
+                fox
+              </div>
+              <div
+                style={{
+                  background: 'lightgray',
+                  padding: '0.5rem',
+                  borderRadius: '7px',
+                }}
+              >
+                jumped
+              </div>
+              <div style={{ padding: '0.5rem' }}>over</div>
+              <div
+                style={{
+                  padding: '0.5rem',
+                }}
+              >
+                the
+              </div>
+
+              <div
+                style={{
+                  padding: '0.5rem',
+                }}
+              >
+                lazy
+              </div>
+              <div
+                style={{
+                  padding: '0.5rem',
+                }}
+              >
+                dog
+              </div>
+            </figure>
+            <br />
+            <Button
+              text="What is your WPM?"
+              intent="primary"
+              onClick={() => {
+                router.push('/typingTest')
+              }}
+            />
+          </Card>
+        </section>
+
+        {/* <h2>Recommendations</h2> */}
         <h2>Experience</h2>
       </div>
 

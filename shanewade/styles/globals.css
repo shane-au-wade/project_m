@@ -27,6 +27,10 @@ a {
   height: 100%;
   width: 100%;
 }
+
+h1, h2, h3 {
+  margin: 0
+}
 /*  animation: name duration timing-function delay iteration-count direction fill-mode; */
 /* .rgb_background_color {
     --name: backgrouncolor-change;
