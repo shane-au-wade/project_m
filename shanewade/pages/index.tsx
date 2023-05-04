@@ -78,7 +78,7 @@ const blog_posts = [
     title: 'The Power of Structured Thinking',
     href: 'https://www.linkedin.com/pulse/power-structured-thinking-shane-wade',
     image:
-      'https://media.licdn.com/dms/image/D5612AQEv9w9j_c-mJA/article-cover_image-shrink_600_2000/0/1682483156602?e=2147483647&v=beta&t=5i71NgCWhmhkUlFi-pQIhU7Y6V_UhmmMwS0lIz1CKEY',
+      'https://lh3.googleusercontent.com/pw/AJFCJaXAu-r690ZcPAMLxJ0flbCGHjkbwnp73wFL7F2KGkm8qrPaTLJLf9N8BUSdqTK6OvQlhvp_3Jc4S7p_hHq9WfmI4VxeRCRncM8RAgVxUKn9-RssbxOz6Z5Gf69hC7YNijtreOdtRq8YeWzEHsRiQ-Xs=w512-h512-s-no?authuser=1',
     description:
       'Senior vs Junior? In the workforce, the distinction between a Senior and Junior employee often lies in their experience and the way they approach problem-solving. Senior employees have developed structured thinking patterns that help them navigate complex situations with ease.',
   },
@@ -86,7 +86,7 @@ const blog_posts = [
     title: 'I Nuked Our Production Database... And Lived to Tell the Tale',
     href: 'https://www.linkedin.com/pulse/i-nuked-our-production-database-lived-tell-tale-shane-wade',
     image:
-      'https://media.licdn.com/dms/image/D5612AQGSZLVUPoOW_w/article-cover_image-shrink_600_2000/0/1681241234495?e=2147483647&v=beta&t=wwDtEj7KIEAG9e4JZxNLVHwvtweKWwu7sU4Ng_kWmqg',
+      'https://lh3.googleusercontent.com/pw/AJFCJaUfGE7arrMw321hyLPjxb0CCLxwh_0na-dge1L3PzqaklF6sF_NUQ5_rBRI2ckpyjYAsEOrsPrpndiMXesITN_rUhbijHBKYt1SySw44w09mi8boqvIQsPFDjzfPwVIkQKwMZWqEXhnT8QVpD61kgE2=w512-h512-s-no?authuser=1',
     description: 'It was a dark and stormy night..',
   },
 ]
