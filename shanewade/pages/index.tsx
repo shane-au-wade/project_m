@@ -129,8 +129,8 @@ const Home: NextPage = () => {
         <Image
           src={'/profile_pic.jpeg'}
           alt="profile picture of shane wade"
-          width={1}
-          height={1}
+          width={300}
+          height={300}
           style={{
             padding: '.10rem',
             height: '15rem',
@@ -146,8 +146,8 @@ const Home: NextPage = () => {
           <Image
             src="/linkedin.svg"
             alt="linkedin social media icon"
-            width={1}
-            height={1}
+            width={50}
+            height={50}
             style={{
               width: '2.5rem',
               height: 'auto',
@@ -185,7 +185,7 @@ const Home: NextPage = () => {
 
         <h2>Projects</h2>
         <section>
-          <img src="https://lh3.googleusercontent.com/pw/AJFCJaWtaVFW3u_f1A4lv88M8mOE4v9yXGz7O9IsI4_H44minjvQFXSKn-ZRcYJkDrj8Yl31yWzwVgMcdscgzlTAgAbUzcH8KOGWBBkArzz8BBwqfEm9kCIXNz7ywGwkWiX4xiFRdrervDnwA2rSUB7fR4l7=w1716-h1287-s-no?authuser=0"></img>
+          {/* <img src="https://lh3.googleusercontent.com/pw/AJFCJaWtaVFW3u_f1A4lv88M8mOE4v9yXGz7O9IsI4_H44minjvQFXSKn-ZRcYJkDrj8Yl31yWzwVgMcdscgzlTAgAbUzcH8KOGWBBkArzz8BBwqfEm9kCIXNz7ywGwkWiX4xiFRdrervDnwA2rSUB7fR4l7=w1716-h1287-s-no?authuser=0"></img> */}
         </section>
         <h2>Prototypes</h2>
         <h2>Products</h2>
