@@ -13,6 +13,10 @@ import { Card, Button, Icon } from '@blueprintjs/core'
 
 import { createUseStyles } from 'react-jss'
 
+import React from 'react'
+
+import InProgress from '../public/components/inProgress'
+
 const useStyles = createUseStyles({
   app: {
     backgroundImage: 'linear-gradient(whitesmoke, white)',
@@ -140,6 +144,93 @@ const Home: NextPage = () => {
   const classes = useStyles()
   const router = useRouter()
 
+  // const products_ref = React.useRef()
+  const blogs_ref = React.useRef<HTMLElement | null>(null)
+  const projects_ref = React.useRef<HTMLElement | null>(null)
+  const prototypes_ref = React.useRef<HTMLElement | null>(null)
+
+  React.useLayoutEffect(() => {
+    if (!blogs_ref.current) return
+    if (!prototypes_ref.current) return
+    if (!projects_ref.current) return
+
+    let blogs_ref_init = true
+    let projects_ref_init = true
+    let prototypes_ref_init = true
+
+    const blogs_observer = new IntersectionObserver(
+      () => {
+        if (!blogs_ref.current) return
+        if (blogs_ref_init) {
+          blogs_ref_init = false
+          return
+        }
+
+        blogs_ref.current.scrollTo(150, 0)
+        setTimeout(() => {
+          if (!blogs_ref.current) return
+          blogs_ref.current.scrollTo(0, 0)
+          blogs_observer.unobserve(blogs_ref.current)
+        }, 500)
+      },
+      {
+        threshold: 0.75,
+      }
+    )
+
+    const projects_observer = new IntersectionObserver(
+      () => {
+        if (!projects_ref.current) return
+        if (projects_ref_init) {
+          projects_ref_init = false
+          return
+        }
+        projects_ref.current.scrollTo(150, 0)
+        setTimeout(() => {
+          if (!projects_ref.current) return
+          projects_ref.current.scrollTo(0, 0)
+          projects_observer.unobserve(projects_ref.current)
+        }, 500)
+      },
+      {
+        threshold: 0.75,
+      }
+    )
+
+    const prototypes_observer = new IntersectionObserver(
+      () => {
+        if (!prototypes_ref.current) return
+        if (prototypes_ref_init) {
+          prototypes_ref_init = false
+          return
+        }
+
+        prototypes_ref.current.scrollTo(150, 0)
+        setTimeout(() => {
+          if (!prototypes_ref.current) return
+          prototypes_ref.current.scrollTo(0, 0)
+          prototypes_observer.unobserve(prototypes_ref.current)
+        }, 500)
+      },
+      {
+        threshold: 0.75,
+      }
+    )
+
+    blogs_observer.observe(blogs_ref.current)
+    projects_observer.observe(projects_ref.current)
+    prototypes_observer.observe(prototypes_ref.current)
+
+    return () => {
+      if (!blogs_ref.current) return
+      if (!prototypes_ref.current) return
+      if (!projects_ref.current) return
+      blogs_observer.unobserve(blogs_ref.current)
+      projects_observer.unobserve(projects_ref.current)
+      prototypes_observer.unobserve(prototypes_ref.current)
+    }
+  }, [blogs_ref, projects_ref, prototypes_ref])
+
   return (
     <div className={classes.app}>
       <div style={{ width: '100%', textAlign: 'center', padding: '1rem' }}>
@@ -211,8 +302,9 @@ const Home: NextPage = () => {
       <div style={{ padding: '1rem' }}>
         <h2 style={{ marginTop: '0' }}>Products</h2>
         <br />
-        <section style={{padding: '1rem'}}>
+        <section style={{ padding: '1rem' }}>
           <Card
+            elevation={2}
             style={{
               maxWidth: '25rem',
               textAlign: 'center',
@@ -255,12 +347,17 @@ const Home: NextPage = () => {
         <br />
         {/* Blog Posts */}
         <h2>Blog Posts</h2>
-        <section style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '2rem' }}>
+        <section
+          ref={blogs_ref}
+          style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '2rem', scrollBehavior: 'smooth' }}
+        >
           {blog_posts.map((post, index) => (
             <Card
+              elevation={2}
               key={index}
               interactive
               onClick={() => {
+                if (post.href == '') return
                 window.open(post.href, '_blank')
               }}
               style={{
@@ -287,12 +384,17 @@ const Home: NextPage = () => {
 
         {/* Projects */}
         <h2>Projects</h2>
-        <section style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '2rem' }}>
+        <section
+          ref={projects_ref}
+          style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '2rem', scrollBehavior: 'smooth' }}
+        >
           {projects.map((post, index) => (
             <Card
+              elevation={2}
               key={index}
               interactive
               onClick={() => {
+                if (post.href == '') return
                 window.open(post.href, '_blank')
               }}
               style={{
@@ -315,8 +417,12 @@ const Home: NextPage = () => {
 
         {/* prototypes */}
         <h2>Prototypes</h2>
-        <section style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '2rem' }}>
+        <section
+          ref={prototypes_ref}
+          style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '2rem', scrollBehavior: 'smooth' }}
+        >
           <Card
+            elevation={2}
             style={{
               maxWidth: '25rem',
               textAlign: 'center',
@@ -408,6 +514,7 @@ const Home: NextPage = () => {
             ></Button>
           </Card>
           <Card
+            elevation={2}
             style={{
               maxWidth: '25rem',
               minWidth: '18rem',
@@ -457,6 +564,7 @@ const Home: NextPage = () => {
             />
           </Card>
           <Card
+            elevation={2}
             style={{
               maxWidth: '25rem',
               minWidth: '18rem',
@@ -563,9 +671,71 @@ const Home: NextPage = () => {
           </Card>
         </section>
 
-        {/* <h2>Recommendations</h2> */}
-        {/* <h2>Experience</h2> */}
+        <h2>Recommendations</h2>
+        <section
+          style={{
+            fontSize: '.3rem',
+            background: 'black',
+            padding: '1rem',
+            paddingTop: '0.5rem',
+            borderRadius: '0.5rem',
+            textAlign: 'center',
+            fontWeight: 'bolder'
+          }}
+        >
+          <InProgress />
+        </section>
+        <br />
+
       </div>
+      <footer style={{ width: '100%', padding: '1rem' }}>
+        <Card
+          elevation={2}
+          style={{
+            backgroundColor: 'lightgray',
+            maxWidth: '25rem',
+            minWidth: '18rem',
+            borderRadius: '0.5rem',
+            padding: '0.75rem',
+            margin: '0 auto',
+          }}
+        >
+          <section
+            style={{
+              margin: '0 auto',
+              display: 'flex',
+              gap: '1rem',
+              width: 'fit-content',
+            }}
+          >
+            <a href="https://www.linkedin.com/in/shane-au-wade" target="_blank">
+              <Image
+                src="/linkedin.svg"
+                alt="linkedin social media icon"
+                width={50}
+                height={50}
+                style={{
+                  width: '2rem',
+                  height: 'auto',
+                }}
+              />
+            </a>
+
+            <a href="https://github.com/shane-au-wade" target="_blank">
+              <Image
+                src="/github-mark.svg"
+                alt="github octocat icon"
+                width={50}
+                height={50}
+                style={{
+                  width: '2rem',
+                  height: 'auto',
+                }}
+              />
+            </a>
+          </section>
+        </Card>
+      </footer>
     </div>
   )
 }
