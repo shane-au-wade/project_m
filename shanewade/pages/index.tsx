@@ -43,29 +43,6 @@ type HomePageCard = {
   icon: string
 }
 
-const cardData: Array<HomePageCard> = [
-  {
-    title: 'about',
-    href: '/about',
-    icon: 'bookmark',
-  },
-  {
-    title: 'Typing Test',
-    href: '/typingTest',
-    icon: 'citation',
-  },
-  {
-    title: 'Animation',
-    href: '/animation',
-    icon: 'draw',
-  },
-  {
-    title: 'SF Bike Lanes',
-    href: '/bikeLanes',
-    icon: 'cycle',
-  },
-]
-
 const projects = [
   {
     title: 'My electric longboard jounrey',
@@ -181,28 +158,99 @@ const Home: NextPage = () => {
         />
         <br />
         <br />
-        <h1>Shane Wade</h1>
-        <p>Engineer and AI Mechanic 🔧 🤖</p>
+        <h1
+          style={{
+            fontSize: '1.25rem',
+            maxWidth: '34rem',
+            margin: '0 auto',
+          }}
+        >
+          Hello 👋 I&lsquo;m Shane Wade, a software engineer and AI mechanic 🔧 🤖 that loves bicycles and building products
+        </h1>
         <br />
-        <a href="https://www.linkedin.com/in/shane-au-wade/" target="_blank">
-          <Image
-            src="/linkedin.svg"
-            alt="linkedin social media icon"
-            width={50}
-            height={50}
-            style={{
-              width: '2.5rem',
-              height: 'auto',
-            }}
-          />
-        </a>
+        <h3>Feel free to reach out for a chat!</h3>
+        <br />
+        <div
+          style={{
+            display: 'flex',
+            margin: '0 auto',
+            width: 'fit-content',
+            gap: '1rem'
+          }}
+        >
+          <a href="https://www.linkedin.com/in/shane-au-wade" target="_blank">
+            <Image
+              src="/linkedin.svg"
+              alt="linkedin social media icon"
+              width={50}
+              height={50}
+              style={{
+                width: '2.5rem',
+                height: 'auto',
+              }}
+            />
+          </a>
+
+          <a href="https://github.com/shane-au-wade" target="_blank">
+            <Image
+              src="/github-mark.svg"
+              alt="github octocat icon"
+              width={50}
+              height={50}
+              style={{
+                width: '2.5rem',
+                height: 'auto',
+              }}
+            />
+          </a>
+        </div>
       </div>
 
       {/* page content container  */}
       <div style={{ padding: '1rem' }}>
         <h2 style={{ marginTop: '0' }}>Products</h2>
-        <a>ImmigrationGPT</a>
+        <br />
+        <Card
+          style={{
+            maxWidth: '25rem',
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Image
+            src="/low_poly_torch.png"
+            alt="immigration gpt torch logo"
+            height={112}
+            width={112}
+            style={{
+              height: '8rem',
+              width: '8rem',
+              margin: '0 auto',
+            }}
+          />
+          <br />
+          <h3>
+            <a href="https://immigrationlaw.chat/" target="_blank">
+              ImmigrationGPT
+            </a>
+          </h3>
+          <p>An AI for your US immigration questions</p>
+          <br />
+          <summary style={{ textAlign: 'left' }}>
+            <p>
+              I built this LLM powered product with two other engineers in about a month. This product is intended to
+              provide actionable advice and answers to your immigration questions.
+            </p>
+            <p>
+              Built with <a href="https://www.linkedin.com/in/phillip-haeusler/">Phillip Haeusler</a> and{' '}
+              <a href="https://www.linkedin.com/in/sepehrard/">Sepehr Ardebilianfard</a>
+            </p>
+          </summary>
+        </Card>
 
+        <br />
+        {/* Blog Posts */}
         <h2>Blog Posts</h2>
         <section style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '2rem' }}>
           {blog_posts.map((post, index) => (
@@ -232,7 +280,9 @@ const Home: NextPage = () => {
             </Card>
           ))}
         </section>
+        <br />
 
+        {/* Projects */}
         <h2>Projects</h2>
         <section style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '2rem' }}>
           {projects.map((post, index) => (
@@ -258,6 +308,9 @@ const Home: NextPage = () => {
             </Card>
           ))}
         </section>
+        <br />
+
+        {/* prototypes */}
         <h2>Prototypes</h2>
         <section style={{ display: 'flex', gap: '1rem', overflowY: 'auto', padding: '2rem' }}>
           <Card
@@ -360,10 +413,45 @@ const Home: NextPage = () => {
           >
             <summary style={{ textAlign: 'left' }}>
               <h3>SF Bike Lane Viz</h3>
-              ___
+              <span
+                style={{
+                  color: 'darkgreen',
+                }}
+              >
+                ___
+              </span>
               <Icon icon="cycle" />
-              ______________
+              <span
+                style={{
+                  color: 'darkgreen',
+                }}
+              >
+                ______________
+              </span>
+              <br />
+              <br />
+              <p>
+                I love bikes. I think they are wonderful peices of engineering and I think they are an excellent option
+                for the sustainable commuter.
+              </p>
+              <p>
+                I&lsquo;ve had the opportunity to chat with many people about bike commuting and their main concerns are
+                safety and time.
+              </p>
+              <p>
+                A significant component of bike safety is the bike infrastructure in a city. I pulled bike lane and
+                collision data from the city of San Francsico to understand where the problems are on the streets that I
+                ride.
+              </p>
             </summary>
+            <br />
+            <Button
+              text="View Collisions"
+              intent="primary"
+              onClick={() => {
+                router.push('/bikeLanes')
+              }}
+            />
           </Card>
           <Card
             style={{
@@ -473,26 +561,7 @@ const Home: NextPage = () => {
         </section>
 
         {/* <h2>Recommendations</h2> */}
-        <h2>Experience</h2>
-      </div>
-
-      <div className={classes.cardContainer}>
-        <div id="test" className={classes.cardContainerRow}>
-          {cardData.map((card, index) => {
-            return (
-              <Card
-                className={classes.card}
-                interactive={true}
-                key={index}
-                onClick={() => {
-                  router.push(card.href)
-                }}
-              >
-                <Button minimal large text={card.title} icon={card.icon} />
-              </Card>
-            )
-          })}
-        </div>
+        {/* <h2>Experience</h2> */}
       </div>
     </div>
   )
