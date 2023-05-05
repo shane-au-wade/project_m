@@ -165,7 +165,8 @@ const Home: NextPage = () => {
             margin: '0 auto',
           }}
         >
-          Hello 👋 I&lsquo;m Shane Wade, a software engineer and AI mechanic 🔧 🤖 that loves bicycles and building products
+          Hello 👋 I&lsquo;m Shane Wade, a software engineer and AI mechanic 🔧 🤖 that loves bicycles and building
+          products
         </h1>
         <br />
         <h3>Feel free to reach out for a chat!</h3>
@@ -175,7 +176,7 @@ const Home: NextPage = () => {
             display: 'flex',
             margin: '0 auto',
             width: 'fit-content',
-            gap: '1rem'
+            gap: '1rem',
           }}
         >
           <a href="https://www.linkedin.com/in/shane-au-wade" target="_blank">
@@ -210,44 +211,46 @@ const Home: NextPage = () => {
       <div style={{ padding: '1rem' }}>
         <h2 style={{ marginTop: '0' }}>Products</h2>
         <br />
-        <Card
-          style={{
-            maxWidth: '25rem',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <Image
-            src="/low_poly_torch.png"
-            alt="immigration gpt torch logo"
-            height={112}
-            width={112}
+        <section style={{padding: '1rem'}}>
+          <Card
             style={{
-              height: '8rem',
-              width: '8rem',
-              margin: '0 auto',
+              maxWidth: '25rem',
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
             }}
-          />
-          <br />
-          <h3>
-            <a href="https://immigrationlaw.chat/" target="_blank">
-              ImmigrationGPT
-            </a>
-          </h3>
-          <p>An AI for your US immigration questions</p>
-          <br />
-          <summary style={{ textAlign: 'left' }}>
-            <p>
-              I built this LLM powered product with two other engineers in about a month. This product is intended to
-              provide actionable advice and answers to your immigration questions.
-            </p>
-            <p>
-              Built with <a href="https://www.linkedin.com/in/phillip-haeusler/">Phillip Haeusler</a> and{' '}
-              <a href="https://www.linkedin.com/in/sepehrard/">Sepehr Ardebilianfard</a>
-            </p>
-          </summary>
-        </Card>
+          >
+            <Image
+              src="/low_poly_torch.png"
+              alt="immigration gpt torch logo"
+              height={112}
+              width={112}
+              style={{
+                height: '8rem',
+                width: '8rem',
+                margin: '0 auto',
+              }}
+            />
+            <br />
+            <h3>
+              <a href="https://immigrationlaw.chat/" target="_blank">
+                ImmigrationGPT
+              </a>
+            </h3>
+            <p>An AI for your US immigration questions</p>
+            <br />
+            <summary style={{ textAlign: 'left' }}>
+              <p>
+                I built this LLM powered product with two other engineers in about a month. This product is intended to
+                provide actionable advice and answers to your immigration questions.
+              </p>
+              <p>
+                Built with <a href="https://www.linkedin.com/in/phillip-haeusler/">Phillip Haeusler</a> and{' '}
+                <a href="https://www.linkedin.com/in/sepehrard/">Sepehr Ardebilianfard</a>
+              </p>
+            </summary>
+          </Card>
+        </section>
 
         <br />
         {/* Blog Posts */}
