@@ -237,6 +237,7 @@ const Home: NextPage = () => {
         <Image
           src={'/profile_pic.jpeg'}
           alt="profile picture of shane wade"
+          priority
           width={300}
           height={300}
           style={{
@@ -299,7 +300,7 @@ const Home: NextPage = () => {
       </div>
 
       {/* page content container  */}
-      <div style={{ padding: '1rem' }}>
+      <div style={{ padding: '1rem', maxWidth: '80rem', margin: 'auto' }}>
         <h2 style={{ marginTop: '0' }}>Products</h2>
         <br />
         <section style={{ padding: '1rem' }}>
@@ -672,6 +673,7 @@ const Home: NextPage = () => {
         </section>
 
         <h2>Recommendations</h2>
+        <br />
         <section
           style={{
             fontSize: '.3rem',
@@ -680,13 +682,12 @@ const Home: NextPage = () => {
             paddingTop: '0.5rem',
             borderRadius: '0.5rem',
             textAlign: 'center',
-            fontWeight: 'bolder'
+            fontWeight: 'bolder',
           }}
         >
           <InProgress />
         </section>
         <br />
-
       </div>
       <footer style={{ width: '100%', padding: '1rem' }}>
         <Card
