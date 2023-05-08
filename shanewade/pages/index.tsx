@@ -112,6 +112,13 @@ const blog_posts = [
       'https://lh3.googleusercontent.com/pw/AJFCJaUfGE7arrMw321hyLPjxb0CCLxwh_0na-dge1L3PzqaklF6sF_NUQ5_rBRI2ckpyjYAsEOrsPrpndiMXesITN_rUhbijHBKYt1SySw44w09mi8boqvIQsPFDjzfPwVIkQKwMZWqEXhnT8QVpD61kgE2=w512-h512-s-no?authuser=1',
     description: 'It was a dark and stormy night..',
   },
+  {
+    title: "Creative Space That's all you",
+    href: 'https://www.linkedin.com/pulse/creative-space-thats-all-you-shane-wade/',
+    image:
+      'https://lh3.googleusercontent.com/pw/AJFCJaWBEb-wDIVQzFFOVdAmudIXCj8qOrjaWPkAxZB4OZE94oqVaqVZucP-A3IXz92ymOaf93pucXdZuD--FKps__2Tr42WdULHOewlBMpija8h1uQNNiGo3cWsmytYE5HjdjgFVHi2TtIhFC0dnqZZd1g_=w1024-h1024-s-no?authuser=1',
+    description: 'Unleash Your Digital Identity: Crafting a Personal Website that Tells Your Unique Story',
+  },
 ]
 
 const blog_post_ideas = [
