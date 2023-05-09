@@ -264,13 +264,40 @@ const Home: NextPage = () => {
             fontSize: '1.25rem',
             maxWidth: '34rem',
             margin: '0 auto',
+            animation: 'textFadeIn 2.5s ease-out',
           }}
         >
-          Hello 👋 I&lsquo;m Shane Wade, a software engineer and AI mechanic 🔧 🤖 that loves bicycles and building
-          products
+          Hello 👋
         </h1>
         <br />
-        <h3>Feel free to reach out for a chat!</h3>
+        <h1
+          style={{
+            fontSize: '1.25rem',
+            maxWidth: '36rem',
+            margin: '0 auto',
+            animation: 'textFadeIn 4.5s ease-out',
+          }}
+        >
+          I&lsquo;m Shane Wade, a software engineer and AI mechanic 🔧 🤖
+        </h1>
+        <h1
+          style={{
+            fontSize: '1.25rem',
+            maxWidth: '34rem',
+            margin: '0 auto',
+            animation: 'textFadeIn 5s ease-out',
+          }}
+        >
+          I love bicycles and building products
+        </h1>
+        <br />
+        <h3
+          style={{
+            animation: 'textFadeIn 5.5s ease-out',
+          }}
+        >
+          Feel free to reach out for a chat!
+        </h3>
         <br />
         <div
           style={{
