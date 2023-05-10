@@ -52,7 +52,7 @@ type HomePageCard = {
 const projects = [
   {
     title: 'My electric longboard jounrey',
-    href: '',
+    href: '/projects/eSk8',
     image:
       'https://lh3.googleusercontent.com/pw/AJFCJaXAPCjl-Svlvw1HcLY_XvXbRGtEWu2HWo5ruRqHHqNPbv3-ooRGcCEB0Rz_99F4gzifbG85tsi8ye-cW8e4MOnK9H-kEcaHK1NFOnKlHkLHlcQ_97bcZKtJrc3jCbTIvuO8cqw9wdTq0-uHQq0gzWd5=w1716-h1145-s-no?authuser=1',
     description:
@@ -60,21 +60,21 @@ const projects = [
   },
   {
     title: 'Electric bikes',
-    href: '',
+    href: '/projects/eBikes',
     image:
       'https://lh3.googleusercontent.com/pw/AJFCJaU3vl-7x6HDbJ0zeAGizM1xbIpwzcjn_UKGJKdgpkHBTXyJPScCLOECWLnzGLaD-I0D8oDaLwbROEgLz1nPd7f3pTlYs8_CcMQBVh8ODwtzpBvIt1UxZRpJf3UYdQjoHqAcyLg_kA-aYBwdFYCkn-RV=w1716-h1287-s-no?authuser=1',
     description: "Maybe you do want mechanical brakes when you're bombing a hill?",
   },
   {
     title: 'The electric motorcycle failure',
-    href: '',
+    href: '/projects/eMotoL',
     image:
       'https://lh3.googleusercontent.com/pw/AJFCJaWtaVFW3u_f1A4lv88M8mOE4v9yXGz7O9IsI4_H44minjvQFXSKn-ZRcYJkDrj8Yl31yWzwVgMcdscgzlTAgAbUzcH8KOGWBBkArzz8BBwqfEm9kCIXNz7ywGwkWiX4xiFRdrervDnwA2rSUB7fR4l7=w1716-h1287-s-no?authuser=1',
     description: 'Of course I had to keep my electric vehicle journey going, the obvious next step was a motorcycle',
   },
   {
     title: 'The 2 stroke pivot: vintage mopeds',
-    href: '',
+    href: '/projects/vintageMopeds',
     image:
       'https://lh3.googleusercontent.com/pw/AJFCJaXgnFm-1mhCsLEmuDVs-Ydqo8FtzLgBr4U6nET8D7mBBc0BBk3lkq7JGjD0NKVpRcmIwt9VCbIFQ5dtR0Pz4UUxrVFCLYK7fmfcyNLbx_RyC6Grugbv4MDqBzfW1mBCrYtBwpvVaaTDhk2S-ZItG3g4=w1716-h1287-s-no?authuser=1',
     description:
@@ -82,14 +82,14 @@ const projects = [
   },
   {
     title: 'Bob Ross Night!',
-    href: '',
+    href: '/projects/bobRoss',
     image:
       'https://lh3.googleusercontent.com/pw/AJFCJaXRXH2M4Nu9FB0Q6sLxgtGPhHokDaPoV8KxBtfxhg0otSZZXODsgJoXXuNZSeWUpkkv0uWn0X0s9_fTAaEBS0elhzOy5v0ZqecW9uspbnpX-l14bLjvV-6RNClyaZs0PM-bFaoeaNFKiYYMa8vfPTP8=w640-h480-s-no?authuser=1',
     description: "We're going to need a bigger easel...",
   },
   {
     title: 'AI Auction House',
-    href: '',
+    href: '/projects/AAH',
     image:
       'https://lh3.googleusercontent.com/pw/AJFCJaVm4zsTNb00v1dGJqt7T-fqps2PGBc3arQ0ihKTY8ulA0WnFtS_6k-nu2Myhhb6If-9-yZH1hSLQLvrLkxbgD9sHTHEO_4kVRs8nZWMP6fpLOQoq9O2FJ_djUMmghBsQD3X6GSvg5sbpgPoeUpU2dKX=w512-h512-s-no?authuser=1',
     description: 'An intro experience to the monetization of generative AI',
@@ -433,6 +433,7 @@ const Home: NextPage = () => {
               onClick={() => {
                 if (post.href == '') return
                 window.open(post.href, '_blank')
+                // router.push(post.href)
               }}
               style={{
                 maxWidth: '25rem',
