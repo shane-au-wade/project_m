@@ -71,6 +71,16 @@ h1, h2, h3 {
 }
 
 
+@keyframes opacityFadeIn {
+  from {
+    opacity: 0;
+    }
+  to {
+    opacity: 1;
+  }
+}
+
+
 @keyframes backgroundcolor-change {
   0% { background-color: rgb(230, 28, 28) }
   10% { background-color: rgb(240, 208, 93) }
