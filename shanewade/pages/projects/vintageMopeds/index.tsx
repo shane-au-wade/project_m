@@ -15,7 +15,9 @@ const useStyles = createUseStyles({
     },
     fig: {
         alignSelf: 'center',
-        height: '10rem',
+        writingMode: 'vertical-rl',
+        fontWeight: 'bolder',
+        fontSize: '0.5rem',
         margin: '0 auto',
     },
 })

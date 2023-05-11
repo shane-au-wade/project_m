@@ -254,7 +254,6 @@ const Home: NextPage = () => {
             height: '15rem',
             width: '15rem',
             borderRadius: '.5rem',
-            // opacity: 0,
             animation: 'opacityFadeIn 2.5s ease-out',
           }}
         />
