@@ -1,0 +1,110 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* you can import any css file into /pages/_app.tsx */
+:root {
+ --start_color: rgb(0,0,0);
+ --end_color: rgb(255,255,255);
+ --animation_state: running;
+ --duration_ms: 50s
+}
+
+#__next {
+  height: 100%;
+  width: 100%;
+}
+
+h1, h2, h3 {
+  margin: 0
+}
+/*  animation: name duration timing-function delay iteration-count direction fill-mode; */
+/* .rgb_background_color {
+    --name: backgrouncolor-change;
+    --timing-function: ease-in-out;
+    --iteration-count: infinite;
+    --delay: 0s;
+    --direction: alternate;
+    --fill-mode: none;
+  animation: var(--name) var(--duration_ms) var(--timing-function) var(--delay) var(--iteration-count) var(--direction) var(--fill-mode);
+  animation-play-state: var(--animation_state);
+} */
+
+.rgb_background_color {
+  animation: ackgroundcolor-change 50s infinite alternate ;
+}
+
+.rgb_color {
+  animation: color-change 50s infinite alternate ;
+}
+
+@keyframes textFadeIn {
+  from {
+    color: transparent;
+  }
+  to {
+    color: black;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    background-color: var(--start_color)
+  }
+  to {
+    background-color: var(--end_color)
+  }
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+@keyframes backgroundcolor-change {
+  0% { background-color: rgb(230, 28, 28) }
+  10% { background-color: rgb(240, 208, 93) }
+  20% { background-color: rgb(150, 245, 61); }
+  30% { background-color: rgb(91, 235, 139); }
+  40% { background-color: rgb(91, 235, 225); }
+  50% { background-color: rgb(91, 146, 235); }
+  60% { background-color: rgb(110, 91, 235); }
+  70% { background-color: rgb(185, 91, 235); }
+  80% { background-color: rgb(245, 105, 194); }
+  90% { background-color: rgb(245, 105, 194);  }
+  100% { background-color: rgb(235, 42, 42); }
+}
+
+@keyframes color-change {
+  0% { color: rgb(230, 28, 28) }
+  10% { color: rgb(240, 208, 93) }
+  20% { color: rgb(150, 245, 61); }
+  30% { color: rgb(91, 235, 139); }
+  40% { color: rgb(91, 235, 225); }
+  50% { color: rgb(91, 146, 235); }
+  60% { color: rgb(110, 91, 235); }
+  70% { color: rgb(185, 91, 235); }
+  80% { color: rgb(245, 105, 194); }
+  90% { color: rgb(245, 105, 194);  }
+  100% { color: rgb(235, 42, 42); }
+}
