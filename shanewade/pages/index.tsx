@@ -9,7 +9,7 @@ import '@blueprintjs/popover2/lib/css/blueprint-popover2.css'
 import { FocusStyleManager } from '@blueprintjs/core'
 FocusStyleManager.onlyShowFocusOnTabs()
 
-import { Card, Button, Icon } from '@blueprintjs/core'
+import { Card, Button, Icon, Tag } from '@blueprintjs/core'
 
 import { createUseStyles } from 'react-jss'
 
@@ -242,7 +242,7 @@ const Home: NextPage = () => {
 
   return (
     <div className={classes.app}>
-      <div style={{ width: '100%', textAlign: 'center', padding: '1rem', }}>
+      <div style={{ width: '100%', textAlign: 'center', padding: '1rem' }}>
         <Image
           src={'/profile_pic.jpeg'}
           alt="profile picture of shane wade"
@@ -349,6 +349,13 @@ const Home: NextPage = () => {
               flexDirection: 'column',
             }}
           >
+            <div
+              style={{
+                textAlign: 'left',
+              }}
+            >
+              <Tag intent="success">Deployed</Tag>
+            </div>
             <Image
               src="/low_poly_torch.png"
               alt="immigration gpt torch logo"
