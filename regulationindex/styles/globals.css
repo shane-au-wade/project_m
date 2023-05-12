@@ -1,9 +1,34 @@
 html,
 body {
+  scroll-behavior: smooth;
+  font-size: 16px;
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+@media screen and (min-width: 480px) {
+  html,
+  body  {
+    font-size: 20px;
+    }
+
+    p {
+      font-size: 0.8rem;
+    }
+
+    h1 {
+      font-size: 1.3rem;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+    }
 }
 
 a {
@@ -29,8 +54,18 @@ a {
 }
 
 h1, h2, h3 {
+  color: #2F4858;
   margin: 0
 }
+
+p {
+  color: #2F4858;
+}
+
+.bp4-input-group {
+  max-width: 25rem;
+}
+
 /*  animation: name duration timing-function delay iteration-count direction fill-mode; */
 /* .rgb_background_color {
     --name: backgrouncolor-change;
