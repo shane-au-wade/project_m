@@ -9,11 +9,13 @@ import '@blueprintjs/popover2/lib/css/blueprint-popover2.css'
 import { FocusStyleManager, InputGroup } from '@blueprintjs/core'
 FocusStyleManager.onlyShowFocusOnTabs()
 
-import { Card, Button, Icon } from '@blueprintjs/core'
+import { Card, Button, Icon, Collapse, Dialog, DialogBody, DialogFooter } from '@blueprintjs/core'
 
 import { createUseStyles } from 'react-jss'
 
 import React from 'react'
+
+import hljs from 'highlight.js'
 
 const useStyles = createUseStyles({
   main: {
@@ -63,6 +65,13 @@ const Article = (props: { title: String; href: String; image_url: String; descri
 const Home: NextPage = () => {
   const classes = useStyles()
   const router = useRouter()
+
+  const [api_open, setApiOpen] = React.useState(false)
+
+  // React.useEffect(() => {
+  //   // if (api_open) return
+
+  // }, [])
 
   return (
     <main className={classes.main}>
@@ -243,6 +252,98 @@ const Home: NextPage = () => {
         <Button large text="Sign me up" intent="primary" minimal outlined />
         <br />
         <sub>*Company is not required</sub>
+        <br />
+        <br />
+        <Button
+          large
+          text="View Proposed API"
+          intent="primary"
+          minimal
+          outlined
+          onClick={() => {
+            setApiOpen(true)
+          }}
+        />
+        <Dialog
+          className="api-docs"
+          title="Proposed API"
+          icon="code"
+          isOpen={api_open}
+          onOpening={() => {
+            hljs.highlightAll()
+          }}
+          onClose={() => {
+            setApiOpen(false)
+          }}
+        >
+          <DialogBody>
+            <h3>Search</h3>
+
+            <pre>
+              <code className="language-python">{`import regulationindex as ri
+
+relevant_documents = ri.search(
+  knowledge_base='fasb-revenue', 
+  text='''
+  what do I need to know to accurately 
+  report reccuring revenue for a public company?
+  '''
+)
+
+## insert relevant documents 
+## into downstream  prompts
+`}</code>
+            </pre>
+            <p style={{ maxWidth: '30rem' }}>
+              The Search API is designed to enable developers to incorporate industry-specific knowledge into their AI
+              systems or agents.
+            </p>
+            <p style={{ maxWidth: '30rem' }}>
+              The Regulation Index will host and curate knowledge, as well as develop robust search algorithms, to
+              ensure your agents have the necessary context they need to do real work.
+            </p>
+            <br />
+            <h3>Suggestion</h3>
+            <pre>
+              <code className="language-python">{`import regulationindex as ri
+
+relevant_knowledge_bases = ri.get_suggestion(
+text='''
+what do I need to know to accurately 
+report reccuring revenue for a public company?
+'''
+)
+
+## choose the best knowledge base
+## based on your own criteria. 
+## You can then search that 
+## knowledge base for relevant documents
+`}</code>
+            </pre>
+            <p style={{ maxWidth: '30rem' }}>
+              The Suggestion API is designed to enable fully autonomous agents to select the most suitable knowledge
+              bases for searching.
+            </p>
+            <p style={{ maxWidth: '30rem' }}>
+              The knowledge base suggestion will function similarly to the search endpoint. However, this time we will
+              curate metadata about each knowledge base to provide the agent with a high-quality selection.
+            </p>
+            <p style={{ maxWidth: '30rem' }}>
+              Once a knowledge base is selected, it can be searched with the search API.{' '}
+            </p>
+          </DialogBody>
+          <DialogFooter
+            actions={
+              <Button
+                intent="primary"
+                text="Close"
+                onClick={() => {
+                  setApiOpen(false)
+                }}
+              />
+            }
+          />
+        </Dialog>
       </section>
 
       <section
@@ -336,7 +437,10 @@ const Home: NextPage = () => {
           }}
         >
           <sub>
-            {'{RegulationIndex}'} | <a target='_blank' href="https://www.linkedin.com/in/shane-au-wade/">linkedin</a>{' '}
+            <strong>{'@RegulationIndex'}</strong> all rights reserved |{' '}
+            <a target="_blank" href="https://www.linkedin.com/in/shane-au-wade/">
+              linkedin
+            </a>{' '}
           </sub>
         </section>
       </div>
