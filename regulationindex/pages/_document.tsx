@@ -37,7 +37,7 @@ class MyDocument extends Document {
         width: '100%'
       }}>
         <Head>
-          <link rel="icon" href="/cube.svg" />
+          <link rel="icon" href="/ri.jpg" />
         </Head>
         <body style={{
           height: '100%',

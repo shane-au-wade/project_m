@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme}>
       <Head>
-        <title>Project M</title>
+        <title>Regulation Index</title>
       </Head>
       <Component {...pageProps} />
     </ThemeProvider>
