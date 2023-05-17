@@ -2,14 +2,7 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 
-// <Setup Blueprint>
-import '@blueprintjs/core/lib/css/blueprint.css'
-import '@blueprintjs/icons/lib/css/blueprint-icons.css'
-import '@blueprintjs/popover2/lib/css/blueprint-popover2.css'
-import { FocusStyleManager, InputGroup } from '@blueprintjs/core'
-FocusStyleManager.onlyShowFocusOnTabs()
-
-import { Card, Button, Icon, Collapse, Dialog, DialogBody, DialogFooter } from '@blueprintjs/core'
+import { Button, Dialog, DialogBody, DialogFooter, InputGroup } from '@blueprintjs/core'
 
 import { createUseStyles } from 'react-jss'
 
@@ -25,6 +18,9 @@ const useStyles = createUseStyles({
     '& section': {
       maxWidth: '45rem',
       margin: '0 auto',
+    },
+    '& p': {
+      marginTop: '1rem',
     },
   },
 })
@@ -163,6 +159,19 @@ const Home: NextPage = () => {
           />
         </div>
         <br />
+        <div>
+          <Button
+            minimal
+            large
+            outlined
+            intent="primary"
+            text="Read Our Thesis"
+            onClick={() => {
+              router.push('/thesis')
+            }}
+          />
+        </div>
+        <br />
         <br />
         <div style={{ width: 'fit-content', margin: '0 auto' }}>
           <Image
@@ -220,15 +229,25 @@ const Home: NextPage = () => {
         </div>
         <br />
         <h3>Initial Industries</h3>
-        <p>Financial Accounting: FASB Accounting Standards Codification</p>
-        <p>Construction: OSHA General Industry and Construction Standards</p>
+        <p>
+          Financial Accounting: <a href="https://asc.fasb.org/Login">FASB Accounting Standards Codification</a>
+        </p>
+        <p style={{
+          margin: '0'
+        }}>
+          Construction: <a href="https://www.osha.gov/laws-regs">OSHA General Industry and Construction Standards</a>
+        </p>
         <br />
         <h3>What standards are you looking for?</h3>
-        <InputGroup
-          large
-          placeholder="Industry standard or regulatory body"
-          rightElement={<Button minimal icon="manually-entered-data" />}
-        />
+        <br/>
+        <div>
+          <InputGroup
+            large
+            placeholder="Industry standard or regulatory body"
+            rightElement={<Button minimal icon="manually-entered-data" />}
+          />
+        </div>
+
         <br />
         <Button large text="Submit Suggestion" intent="primary" minimal outlined />
       </section>
@@ -437,7 +456,7 @@ report reccuring revenue for a public company?
           }}
         >
           <sub>
-            <strong>{'@RegulationIndex'}</strong> all rights reserved |{' '}
+            <strong>{'@Regulation Index'}</strong> all rights reserved |{' '}
             <a target="_blank" href="https://www.linkedin.com/in/shane-au-wade/">
               linkedin
             </a>{' '}
