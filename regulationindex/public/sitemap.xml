@@ -1,12 +1,11 @@
-<xml version="1.0" encoding="UTF-8">
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        <url>
-            <loc>http://www.regulationindex.com/</loc>
-            <lastmod>2023-05-15</lastmod>
-        </url>
-        <url>
-            <loc>http://www.regulationindex.com/thesis</loc>
-            <lastmod>2023-05-15</lastmod>
-        </url>
-    </urlset>
-</xml>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<url>
+		<loc>https://regulationindex.com/</loc>
+		<lastmod>2023-05-16T00:01:02Z</lastmod>
+	</url>
+	<url>
+		<loc>https://regulationindex.com/thesis</loc>
+		<lastmod>2023-05-16T00:01:02Z</lastmod>
+	</url>
+</urlset>
