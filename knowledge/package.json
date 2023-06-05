@@ -1,0 +1,12 @@
+{
+  "name": "knowledge",
+  "version": "1.0.0",
+  "description": "repo to store and load knowledgebases into databases",
+  "main": "index.js",
+  "author": "Shane Wade",
+  "license": "MIT",
+  "dependencies": {
+    "chromadb": "^1.5.2",
+    "openai": "^3.2.1"
+  }
+}
