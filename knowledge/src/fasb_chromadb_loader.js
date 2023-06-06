@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const util = require('util')
+const { OPENAI_API_KEY } = require('./config')
 
 const { ChromaClient } = require('chromadb')
 
@@ -8,7 +9,7 @@ const client = new ChromaClient()
 
 const { Configuration, OpenAIApi } = require('openai')
 const configuration = new Configuration({
-  apiKey: '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',
+  apiKey: OPENAI_API_KEY,
 })
 const openai = new OpenAIApi(configuration)
 
@@ -159,7 +160,7 @@ loadJsonFiles('./knowledge/fasb/documents', './knowledge/fasb/embeddings')
     }
 
     const docs_per_chunk = 2000
-    const chunks = documents.length/docs_per_chunk
+    const chunks = Math.ceil(documents.length / docs_per_chunk)
     const chunked_ids = chunkIntoN(ids, chunks)
     const chunked_embeddings = chunkIntoN(embeddings, chunks)
     const chunked_metadatas = chunkIntoN(metadatas, chunks)
