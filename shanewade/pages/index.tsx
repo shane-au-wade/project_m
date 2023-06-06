@@ -333,6 +333,43 @@ const Home: NextPage = () => {
             />
           </a>
         </div>
+        <Button
+          icon="lab-test"
+          onClick={() => {
+            const DEFAULT_FETCH_OPTIONS: RequestInit = {
+              credentials: 'include',
+            }
+            function putNewChatMessage(message: String) {
+              const new_message = {
+                query: message,
+              }
+              console.log(new_message)
+              return fetch('/api/fasb', {
+                ...DEFAULT_FETCH_OPTIONS,
+                method: 'POST',
+                body: JSON.stringify(new_message),
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              })
+            }
+
+            putNewChatMessage(
+              'I have a company that is publically traded and I want to know which documents I need to review to make sure I comply with the law'
+            ).then(async (res) => {
+
+              const data: {
+                  chat_id: String,
+                  message: String,
+                  products: []
+              } = await res.json()
+
+              console.log(data)
+            })
+
+
+          }}
+        ></Button>
       </div>
 
       {/* page content container  */}
