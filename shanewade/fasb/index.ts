@@ -68,19 +68,35 @@ function filterQueryResults(ids, docs, metadatas, n = 10) {
 function formatDocs(ids, documents, metadatas) {
   const text = []
   for (const [index, doc] of documents.entries()) {
-    text.push(`${ids[index]}\n${doc}\n`)
+    text.push(`ASC Topic ${doc}\n`)
   }
   return text.join('\n')
 }
 
 function getChatPrompt(query, docs_text) {
+  //   return `
+  // FASB CODIFICATION
+  // ---
+  // ${docs_text}
+  // ---
+  // ${query}
+  // Please cite the specific topic numbers. Please use direct quotes from the topics to support your answer.
+  // `
+
+  return `${query}`
+}
+
+function getChatSystemPrompt(docs_text) {
   return `
-FASB CODIFICATION
----
+Relevant ASC Topics
 ${docs_text}
----
-${query}
-Please cite the specific topic numbers`
+
+You are an expert financial accounting AI
+You help people with accounting standards codification (ASC) questions
+Read the Relevant ASC Topics to answer the questions
+If the Relevant ASC Topics do not contain the necessary information DO NOT ANSWER 
+Please cite the specific topic numbers.
+`
 }
 
 function getVseoPrompt(query) {
@@ -105,11 +121,26 @@ NEW QUERY STRINGS:
 `
 }
 
-export async function converse(query: string) {
+function findAscTopicNumber(str) {
+  // The regex matches numbers separated by dashes, up to 4 segments (e.g. 606, 840-30, 707-10-10, 101-10-10-1)
+  const match = str.match(/(\d+(-\d+){0,3})/)
+  return match ? match[0] : null
+}
+
+export async function converse(query) {
   thread.push({
     role: 'user',
     content: query,
   })
+
+  const user_messages = thread.filter((chat) => chat.role == 'user')
+
+  console.log('INFO: generating response, please wait...')
+
+  // asc topic extraction
+  const topic = findAscTopicNumber(query)
+
+  console.log('INFO: asc topic detected: ', topic)
 
   // VSEO
   const vseo_prompt = getVseoPrompt(query)
@@ -146,44 +177,83 @@ export async function converse(query: string) {
   const result = await fasb_collection.query({
     queryEmbeddings: query_embeddings,
     nResults: 10,
-    // where: { metadata_field: 'is_equal_to_this' },
   })
+
   console.log('INFO: chroma query results', result.ids)
 
-  const [relevant_ids, relevant_docs, relevant_metadatas] = filterQueryResults(
+  let [relevant_ids, relevant_docs, relevant_metadatas] = filterQueryResults(
     result.ids,
     result.documents,
     result.metadatas,
-    10
+    5
   )
+
+  if (topic) {
+    const topic_results = await fasb_collection.get({
+      limit: 100,
+      whereDocument: { $contains: `#${topic}` },
+    })
+
+    console.log('INFO: chroma topic query results', topic_results.ids)
+
+    const max_docs = 5
+
+    const topic_ids = []
+    const topics_docs = []
+    const topic_metadatas = []
+
+    for (const [index, id] of topic_results.ids.entries()) {
+      if (id.includes(topic) && topic_ids.length < max_docs) {
+        topic_ids.push(id)
+        topics_docs.push(topic_results.documents[index])
+        topic_metadatas.push(topic_results.metadatas[index])
+      }
+    }
+
+    console.log('INFO: chroma topic query filtered results', topic_ids)
+
+    relevant_ids.push(...topic_ids)
+    relevant_docs.push(...topics_docs)
+    relevant_metadatas.push(...topic_metadatas)
+  }
 
   console.log('INFO: relevant_ids', relevant_ids)
 
-  const doc_text = formatDocs(relevant_ids, relevant_docs, relevant_metadatas)
+  const docs_text = formatDocs(relevant_ids, relevant_docs, relevant_metadatas)
 
-  const chat_prompt = getChatPrompt(query, doc_text)
+  const chat_prompt = getChatPrompt(query, docs_text)
 
-  // console.log(chat_prompt)
+  const chat_system = getChatSystemPrompt(docs_text)
 
-  const completion = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo',
-    messages: [
-      {
-        role: 'system',
-        content: `You are an expert financial statement auditor
-You will use the FASB Accounting Standards Codification (ASC) to awnser questions and write memos
-Please cite the specific topic numbers`,
-      },
-      {
-        role: 'user',
-        content: chat_prompt,
-      },
-    ],
-  })
+  console.log('INFO: chat system prompt', chat_system)
 
-  const ai_response = completion.data.choices[0].message
+  //check if atleast one entry contains the topic substring
+  const good_query = topic
+    ? relevant_ids.some((id) => {
+        return id.toLowerCase().includes(topic.toLowerCase())
+      })
+    : true
 
-  thread.push(ai_response)
+  console.log('INFO: relevant ids contain topic? ', good_query)
 
-  return ai_response.content
+  if (good_query) {
+    const completion = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        {
+          role: 'system',
+          content: chat_system,
+        },
+        ...thread.slice(-5),
+      ],
+    })
+
+    const ai_response = completion.data.choices[0].message
+
+    thread.push(ai_response)
+
+    return ai_response.content
+  }
+
+  return `The system was unable to find ${topic}.  The topic number is incorrect or we are missing some data.`
 }

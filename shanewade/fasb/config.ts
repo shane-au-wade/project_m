@@ -1,4 +1,4 @@
-export const OPENAI_API_KEY = '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'
+export const OPENAI_API_KEY = ''
 
 export const MODELS_CONFIG = {
   'gpt-3.5': {
