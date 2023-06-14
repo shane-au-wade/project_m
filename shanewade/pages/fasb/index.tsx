@@ -12,8 +12,6 @@ FocusStyleManager.onlyShowFocusOnTabs()
 
 import { TextArea, Button, Spinner, Tag, Icon } from '@blueprintjs/core'
 
-
-
 const useStyles = createUseStyles({
   container: {
     height: '100%',
@@ -31,8 +29,8 @@ const useStyles = createUseStyles({
     padding: '5px',
     width: '100%',
     '@media (min-width: 800px)': {
-      maxWidth: '50rem'
-    }
+      maxWidth: '50rem',
+    },
   },
 })
 
@@ -165,8 +163,9 @@ const Page: NextPage = () => {
             gap: '0.5rem',
           }}
         >
-          {state.chat_history.map((chat_msg) => (
+          {state.chat_history.map((chat_msg, index) => (
             <div
+              key={index}
               style={{
                 width: '100%',
                 display: 'flex',
@@ -212,7 +211,6 @@ const Page: NextPage = () => {
             </div>
           ))}
         </div>
-
 
         <div
           id="text_input_container"
