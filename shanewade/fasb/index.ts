@@ -146,16 +146,24 @@ export async function converse(query) {
 
   // VSEO
   const vseo_prompt = getVseoPrompt(query)
-  const veso_result = await openai.createCompletion({
-    model: 'text-davinci-003',
-    prompt: vseo_prompt,
-    temperature: 1,
-    max_tokens: 512,
-    top_p: 1,
-    frequency_penalty: 2,
-    presence_penalty: 0,
+  const vseo_response = await fetch('https://api.openai.com/v1/completions', {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${OPENAI_API_KEY ?? ''}`,
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      model: 'text-davinci-003',
+      prompt: vseo_prompt,
+      temperature: 1,
+      max_tokens: 512,
+      top_p: 1,
+      frequency_penalty: 2,
+      presence_penalty: 0,
+    }),
   })
-  const vseo_query_strings = JSON.parse(veso_result.data.choices[0].text.trim()) ?? []
+  const vseo_json = await vseo_response.json()
+  const vseo_query_strings = JSON.parse(vseo_json.choices[0].text.trim()) ?? []
 
   vseo_query_strings.push(query)
 
@@ -164,11 +172,19 @@ export async function converse(query) {
   const query_embeddings = []
   for (const query_string of vseo_query_strings) {
     // embed query
-    const response = await openai.createEmbedding({
-      model: 'text-embedding-ada-002',
-      input: query_string,
+    const response = await fetch('https://api.openai.com/v1/embeddings', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${OPENAI_API_KEY ?? ''}`,
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        model: 'text-embedding-ada-002',
+        input: query_string,
+      }),
     })
-    const query_embedding = response.data.data[0].embedding
+    const response_data = await response.json()
+    const query_embedding = response_data.data[0].embedding
     query_embeddings.push(query_embedding)
   }
 
@@ -239,18 +255,26 @@ export async function converse(query) {
   console.log('INFO: relevant ids contain topic? ', good_query)
 
   if (good_query) {
-    const completion = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
-      messages: [
-        {
-          role: 'system',
-          content: chat_system,
-        },
-        ...thread.slice(-5),
-      ],
+    const completion = await fetch('https://api.openai.com/v1/chat/completions', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${OPENAI_API_KEY ?? ''}`,
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'system',
+            content: chat_system,
+          },
+          ...thread.slice(-5),
+        ],
+      }),
     })
+    const completion_data = await completion.json()
 
-    const ai_response = completion.data.choices[0].message
+    const ai_response = completion_data.choices[0].message
 
     thread.push(ai_response)
 
