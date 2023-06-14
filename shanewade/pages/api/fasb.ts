@@ -10,9 +10,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   if (req.method === 'POST') {
     // Process a POST request
     const { query } = req.body
-    // const message = await converse(query)
+    const message = await converse(query)
     res.status(200).json({
-      message: 'AI MESSAGE IS UNDER DEVELOPMENT',
+      message: message,
     })
   }
 }
