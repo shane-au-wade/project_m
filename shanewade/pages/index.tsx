@@ -98,6 +98,22 @@ const projects = [
 
 const blog_posts = [
   {
+    title: 'AI After Hours - #TechWeek write up',
+    href: 'https://www.linkedin.com/pulse/ai-after-hours-techweek-write-up-shane-wade/?trackingId=wwUFNJyIQKOOqVr962xrfA%3D%3D',
+    image:
+      'https://lh3.googleusercontent.com/pw/AJFCJaX5AqAaDsHt6PbfvwnzVgE8Ws3pU1S-AD46L75iESErpurGNpNGFRovvUrBK646D1a4NkrqLg9tYXpZ1ePHyHD04mgrMO3eS0trRkgC9JAwNBg9ZLhl1pSgzTwoUrzLsOoEXhjXxOmNPnCv3Md7Yfup=w1300-h1296-s-no?authuser=1',
+    description:
+      "Yesterday, Bloomberg Beta hosted their AI After Hours event. The venue was Bloomberg's high rise office space, complete with light snacks and some delicious kombucha floats: sorbet with kombucha, like the original rootbeer float.",
+  },
+  {
+    title: 'Side Hustle Sunday Part 1',
+    href: 'https://www.linkedin.com/pulse/side-hustle-sunday-part-1-shane-wade/',
+    image:
+      'https://lh3.googleusercontent.com/pw/AJFCJaXvELKJXoU4hfTu_2QnU49WDMxCszgomTEg1EssruJJzr17LjVK_IgE_y5bskqxqZ1yNr0uxS4hV44RJcvQuvXDCVYfAE-oGjDGg7VbHJ6OopvO0yjJJdfFnk3UYII6rOQhsk4X2VUTApyFk-fbbpn-=w1296-h1296-s-no?authuser=1',
+    description:
+      "Selling digital seamless patterns If you haven't see the copious 'AI Side Hustles' on the internet then..",
+  },
+  {
     title: "Creative Space That's all you",
     href: 'https://www.linkedin.com/pulse/creative-space-thats-all-you-shane-wade/',
     image:
@@ -333,43 +349,6 @@ const Home: NextPage = () => {
             />
           </a>
         </div>
-        <Button
-          icon="lab-test"
-          onClick={() => {
-            const DEFAULT_FETCH_OPTIONS: RequestInit = {
-              credentials: 'include',
-            }
-            function putNewChatMessage(message: String) {
-              const new_message = {
-                query: message,
-              }
-              console.log(new_message)
-              return fetch('/api/fasb', {
-                ...DEFAULT_FETCH_OPTIONS,
-                method: 'POST',
-                body: JSON.stringify(new_message),
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              })
-            }
-
-            putNewChatMessage(
-              'I have a company that is publically traded and I want to know which documents I need to review to make sure I comply with the law'
-            ).then(async (res) => {
-
-              const data: {
-                  chat_id: String,
-                  message: String,
-                  products: []
-              } = await res.json()
-
-              console.log(data)
-            })
-
-
-          }}
-        ></Button>
       </div>
 
       {/* page content container  */}
