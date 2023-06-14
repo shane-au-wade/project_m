@@ -1,4 +1,6 @@
-export const OPENAI_API_KEY = ''
+export const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+
+export const CHROMADB_URL = process.env.CHROMADB_URL
 
 export const MODELS_CONFIG = {
   'gpt-3.5': {
