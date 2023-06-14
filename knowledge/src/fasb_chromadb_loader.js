@@ -85,9 +85,9 @@ async function loadJsonFiles(document_directory, embedding_directory) {
       const char_limit = 5000
       if (document.length > char_limit) {
         const trunc_document = document.slice(0, char_limit) + '...'
-        documents.push(trunc_document)
+        documents.push(`#${id}\n${trunc_document}`)
       } else {
-        documents.push(document)
+        documents.push(`#${id}\n${document}`)
       }
 
       ids.push(id)

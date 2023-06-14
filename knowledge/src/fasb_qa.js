@@ -75,34 +75,19 @@ function filterQueryResults(ids, docs, metadatas, n = 10) {
 function formatDocs(ids, documents, metadatas) {
   const text = []
   for (const [index, doc] of documents.entries()) {
-    text.push(`ASC Topic ${doc}\n`)
+    text.push(`${ids[index]}\n${doc}\n`)
   }
   return text.join('\n')
 }
 
 function getChatPrompt(query, docs_text) {
-  //   return `
-  // FASB CODIFICATION
-  // ---
-  // ${docs_text}
-  // ---
-  // ${query}
-  // Please cite the specific topic numbers. Please use direct quotes from the topics to support your answer.
-  // `
-
-  return `${query}`
-}
-
-function getChatSystemPrompt(docs_text) {
   return `
-Relevant ASC Topics
+FASB CODIFICATION
+---
 ${docs_text}
-
-You are an expert financial accounting AI
-You help people with accounting standards codification (ASC) questions
-Read the Relevant ASC Topics to answer the questions
-If the Relevant ASC Topics do not contain the necessary information DO NOT ANSWER 
-Please cite the specific topic numbers.
+---
+${query}
+Please cite the specific topic numbers. Please use direct quotes from the topics to support your answer.
 `
 }
 
@@ -140,27 +125,26 @@ async function converse(query) {
     content: query,
   })
 
-  const user_messages = thread.filter((chat) => chat.role == 'user')
-
   console.log('INFO: generating response, please wait...')
 
   // asc topic extraction
   const topic = findAscTopicNumber(query)
-
   console.log('INFO: asc topic detected: ', topic)
 
-  // VSEO
-  const vseo_prompt = getVseoPrompt(query)
-  const veso_result = await openai.createCompletion({
-    model: 'text-davinci-003',
-    prompt: vseo_prompt,
-    temperature: 1,
-    max_tokens: 512,
-    top_p: 1,
-    frequency_penalty: 2,
-    presence_penalty: 0,
-  })
-  const vseo_query_strings = JSON.parse(veso_result.data.choices[0].text.trim()) ?? []
+  //   // VSEO
+  //   const vseo_prompt = getVseoPrompt(query)
+  //   const veso_result = await openai.createCompletion({
+  //     model: 'text-davinci-003',
+  //     prompt: vseo_prompt,
+  //     temperature: 1,
+  //     max_tokens: 512,
+  //     top_p: 1,
+  //     frequency_penalty: 2,
+  //     presence_penalty: 0,
+  //   })
+  //   const vseo_query_strings = JSON.parse(veso_result.data.choices[0].text.trim()) ?? []
+
+  const vseo_query_strings = []
 
   vseo_query_strings.push(query)
 
@@ -197,20 +181,20 @@ async function converse(query) {
 
   if (topic) {
     const topic_results = await fasb_collection.get({
-      limit: 100,
-      whereDocument: { $contains: `#${topic}` },
+      limit: 10,
+      whereDocument: { $contains: topic },
     })
 
-    console.log('INFO: chroma topic query results', topic_results.ids)
+    console.log(topic_results)
 
-    const max_docs = 5
+    console.log('INFO: chroma topic query results', topic_results.ids)
 
     const topic_ids = []
     const topics_docs = []
     const topic_metadatas = []
 
     for (const [index, id] of topic_results.ids.entries()) {
-      if (id.includes(topic) && topic_ids.length < max_docs) {
+      if (id.includes(topic)) {
         topic_ids.push(id)
         topics_docs.push(topic_results.documents[index])
         topic_metadatas.push(topic_results.metadatas[index])
@@ -226,43 +210,22 @@ async function converse(query) {
 
   console.log('INFO: relevant_ids', relevant_ids)
 
-  const docs_text = formatDocs(relevant_ids, relevant_docs, relevant_metadatas)
+  const doc_text = formatDocs(relevant_ids, relevant_docs, relevant_metadatas)
 
-  const chat_prompt = getChatPrompt(query, docs_text)
+  const chat_prompt = getChatPrompt(query, doc_text)
 
-  const chat_system = getChatSystemPrompt(docs_text)
-
-  console.log('INFO: chat system prompt', chat_system)
+  // console.log(chat_prompt)
+  // return 'yes'
 
   //check if atleast one entry contains the topic substring
-  const good_query = topic
-    ? relevant_ids.some((id) => {
-        return id.toLowerCase().includes(topic.toLowerCase())
-      })
-    : true
+
+  const good_query = relevant_ids.some((id) => {
+    return id.toLowerCase().includes(topic.toLowerCase())
+  })
 
   console.log('INFO: relevant ids contain topic? ', good_query)
 
-  if (good_query) {
-    const completion = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
-      messages: [
-        {
-          role: 'system',
-          content: chat_system,
-        },
-        ...thread.slice(-5),
-      ],
-    })
-
-    const ai_response = completion.data.choices[0].message
-
-    thread.push(ai_response)
-
-    return ai_response.content
-  }
-
-  return `The system was unable to find ${topic}.  The topic number is incorrect or we are missing some data.`
+  return 'unable to find message'
 }
 
 rl.setPrompt('USER > ')
@@ -280,19 +243,3 @@ rl.on('line', async (line) => {
   console.log('Goodbye!')
   process.exit(0)
 })
-
-// // embed query
-// const response = await openai.createEmbedding({
-//   model: 'text-embedding-ada-002',
-//   input: query,
-// })
-// const query_embedding = response.data.data[0].embedding
-
-// // find relevant documents
-// const fasb_collection = await client.getCollection(collection_config)
-// const result = await fasb_collection.query({
-//   queryEmbeddings: [query_embedding],
-//   nResults: 10,
-//   // where: { metadata_field: 'is_equal_to_this' },
-// })
-// console.table(result.ids)

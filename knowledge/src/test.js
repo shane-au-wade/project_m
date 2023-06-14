@@ -206,6 +206,32 @@ function filterQueryResults(ids, docs, metadatas, n = 10) {
   return [relevant_ids, relevant_docs, relevant_metadatas]
 }
 
-const [relevant_ids, relevant_docs, relevant_metadatas] = filterQueryResults(ids, docs, metadatas, 10)
+// const [relevant_ids, relevant_docs, relevant_metadatas] = filterQueryResults(ids, docs, metadatas, 10)
 
-console.log(relevant_ids, relevant_docs, relevant_metadatas)
+// console.log(relevant_ids, relevant_docs, relevant_metadatas)
+
+
+function findAscTopicNumber(str) {
+  // The regex matches numbers separated by dashes, up to 4 segments (e.g. 606, 840-30, 707-10-10, 101-10-10-1)
+  const match = str.match(/(\d+(-\d+){0,3})/);
+  return match ? match[0] : null;
+}
+
+// console.log(findAscTopicNumber(''))
+
+
+console.log(findAscTopicNumber("This is a test string with number 606-10-55-407 in it."));
+// Outputs: "606-10-55-407"
+
+console.log(findAscTopicNumber("Another test string with number 101-10-10-1 in it."));
+// Outputs: "101-10-10-1"
+
+console.log(findAscTopicNumber("Another test string with number 101-10 in it."));
+// Outputs: "101-10"
+
+
+console.log(findAscTopicNumber("Another test string with number 606 in it."));
+// Outputs: "101-10"
+
+console.log(findAscTopicNumber("Test string with no number in it."));
+// Outputs: null

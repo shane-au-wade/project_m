@@ -1,0 +1,146 @@
+Relevant ASC Topics
+ASC Topic #840-30-05-1
+This Subtopic addresses accounting by lessees and lessors for leases that have been classified as capital leases in accordance with the guidance in Subtopic 840-10. The General Subsections address accounting by both lessees and lessors.
+PENDING CONTENT
+Transition Date: December 16, 2018;  December 16, 2021Transition Guidance:842-10-65-1
+Paragraph superseded by Accounting Standards Update No. 2016-02.
+
+ASC Topic #840-30-30-4
+Example 1 (paragraph 840-30-55-1) illustrates a lessee's accounting for a capital lease, including the lessee's initial measurement of a capital lease asset and obligation.
+PENDING CONTENT
+Transition Date: December 16, 2018;  December 16, 2021Transition Guidance:842-10-65-1
+Paragraph superseded by Accounting Standards Update No. 2016-02.
+
+ASC Topic #840-30-35-9
+Example 1 (see paragraph 840-30-55-1) illustrates a lessee's accounting for a capital lease, including the lessee's amortization of a capital lease obligation.
+PENDING CONTENT
+Transition Date: December 16, 2018;  December 16, 2021Transition Guidance:842-10-65-1
+Paragraph superseded by Accounting Standards Update No. 2016-02.
+
+ASC Topic #840-30-30-1
+The lessee shall measure a capital lease asset and capital lease obligation initially at an amount equal to the present value at the beginning of the lease term of minimum lease payments during the lease term excluding that portion of the payments representing executory costs (such as insurance, maintenance, and taxes to be paid by the lessor) including any profit thereon.
+PENDING CONTENT
+Transition Date: December 16, 2018;  December 16, 2021Transition Guidance:842-10-65-1
+Editor's Note: Paragraph 840-30-30-1 will be superseded upon transition, together with its heading.
+> Overall Guidance
+Paragraph superseded by Accounting Standards Update No. 2016-02.
+
+ASC Topic #840-30-55-1
+This Example illustrates a lessee's accounting for a capital lease in accordance with the guidance in this Subtopic, including journal entries for the first month of the lease and the disposition of the leased asset at the end of the lease term.
+PENDING CONTENT
+Transition Date: December 16, 2018;  December 16, 2021Transition Guidance:842-10-65-1
+Editor's Note: Paragraph 840-30-55-1 will be superseded upon transition, together with its headings.
+> Illustrations
+> > Example 1: Lessee's Accounting for a Capital Lease
+Paragraph superseded by Accounting Standards Update No. 2016-02.
+
+ASC Topic #842-10-00-1
+The following table identifies the changes made to this Subtopic.
+Paragraph	Action	Accounting Standards Update	Date
+			
+Acquiree	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Acquirer	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Acquisition by a Not-for-Profit Entity	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Advance Refunding	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Business	Amended	Accounting Standards Update No. 2017-01	01/05/2017
+Business	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Business Combination	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Commencement Date of the Lease (Commencement Date)	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Consideration in the Contract	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Contract	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Direct Financing Lease	Amended	Accounting Standards Update No. 2021-05	07/19/2021
+Direct Financing Lease	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Discount Rate for the Lease	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Economic Life	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Effective Date of the Modification	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Fair Value (2nd def.)	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Finance Lease	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Fiscal Funding Clause	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Incremental Borrowing Rate	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Initial Direct Costs	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Inventory	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Lease	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Lease Liability	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Lease Modification	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Lease Payments	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Lease Receivable	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Lease Term	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Legal Entity	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Lessee	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Lessor	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Leveraged Lease	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Market Participants	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Net Investment in the Lease	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Not-for-Profit Entity	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Operating Lease	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Orderly Transaction	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Penalty	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Period of Use	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Probable (2nd def.)	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Public Business Entity	Amended	Maintenance Update 2017-06	04/07/2017
+Public Business Entity	Amended	Maintenance Update 2016-11	06/27/2016
+Public Business Entity	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Rate Implicit in the Lease	Amended	Accounting Standards Update No. 2018-10	07/18/2018
+Rate Implicit in the Lease	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Related Parties	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Remote	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Residual Value Guarantee	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Right-of-Use Asset	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Sales-Type Lease	Amended	Accounting Standards Update No. 2021-05	07/19/2021
+Sales-Type Lease	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Selling Profit or Selling Loss	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Short-Term Lease	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Standalone Price	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Sublease	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Underlying Asset	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Unguaranteed Residual Asset	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Variable Interest Entity	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Variable Lease Payments	Added	Accounting Standards Update No. 2016-02	02/25/2016
+Warranty	Added	Accounting Standards Update No. 2016-02	02/25/2016
+			
+842-10-05-1	Added	Accounting Standards Update No. 2016-02	02/25/2016
+842-10-05-2	Added	Accounting Standards Update No. 2016-02	02/25/2016
+842-10-10-1	Added	Accounting Standards Update No. 2016-02	02/25/2016
+842-10-10-2	Added	Accounting Standards Update No. 2016-02	02/25/2016
+842-10-15-1 through 15-43	Added	Accounting Standards Update No. 2016-02	02/25/2016
+842-10-15-3A through 15-3C	Added	Accounting Stand...
+
+ASC Topic #842-10-05-1
+PENDING CONTENT
+Transition Date: December 16, 2018;  December 16, 2021Transition Guidance:842-10-65-1
+The Leases Topic includes the following Subtopics:
+aOverall
+bLessee
+cLessor
+dSale and Leaseback Transactions
+eLeveraged Lease Arrangements
+
+ASC Topic #842-10-05-2
+PENDING CONTENT
+Transition Date: December 16, 2018;  December 16, 2021Transition Guidance:842-10-65-1
+The Subtopics listed in paragraph 842-10-05-1 establish the requirements of financial accounting and reporting for lessees and lessors.
+
+ASC Topic #842-10-10-1
+PENDING CONTENT
+Transition Date: December 16, 2018;  December 16, 2021Transition Guidance:842-10-65-1
+This Topic specifies the accounting for leases. An entity should consider the terms and conditions of the contract and all relevant facts and circumstances when applying this Topic. An entity should apply this Topic consistently to leases with similar characteristics and in similar circumstances.
+
+ASC Topic #842-10-10-2
+PENDING CONTENT
+Transition Date: December 16, 2018;  December 16, 2021Transition Guidance:842-10-65-1
+The objective of this Topic is to establish the principles that lessees and lessors shall apply to report useful information to users of financial statements about the amount, timing, and uncertainty of cash flows arising from a lease.
+
+
+You are an expert financial accounting AI
+You help people with accounting standards codification (ASC) questions
+Read the Relevant ASC Topics to answer the questions
+If the Relevant ASC Topics do not contain the necessary information DO NOT ANSWER 
+Please cite the specific topic numbers 
+Please use direct quotes from the topics to support your answer
+
+INFO: relevant ids contain topic?  true
+FASB > ASC 842-30-30-1 specifies that for a capital lease, "the lessee shall measure a lease liability and a right-of-use asset initially at an amount equal to the present value of payments to be made over the lease term, with the present value determined at the lease commencement date." This includes "minimum lease payments, any guaranteed residual value, any exercise price at the end of the lease term to purchase the underlying asset, and payments in lieu of taxes or insurance." The discounted rate used to calculate the present value should be the incremental borrowing rate of the lessee, or the rate implicit in the lease if that can be readily determined and is lower. 
+
+Once the lease liability and right-of-use asset are initially measured, the lease liability should be reduced as lease payments are made, and interest expense should be recognized on the lease liability using the effective interest method. The right-of-use asset should be amortized over the lease term using the straight-line method, subject to impairment if necessary. 
+
+In summary, a lessee should recognize a lease liability and a right-of-use asset for a capital lease under ASC 842, and make subsequent adjustments to these balances as necessary based on lease payments and interest calculations.
