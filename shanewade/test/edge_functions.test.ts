@@ -6,7 +6,7 @@
 import { converse } from '../fasb'
 
 test('should load', async () => {
-  const result = await converse('How should stock-based compensation be accounted for according to ASC 718?')
-
-  expect(result)
+  await expect(
+    converse('How should stock-based compensation be accounted for according to ASC 718?')
+  ).resolves.toBeTruthy()
 })
