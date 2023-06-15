@@ -1,5 +1,5 @@
-const { ChromaClient } = require('chromadb')
-const { OPENAI_API_KEY, CHROMADB_URL } = require('./config')
+import { ChromaClient } from 'chromadb'
+import { OPENAI_API_KEY, CHROMADB_URL } from './config'
 
 const client = new ChromaClient({
   path: CHROMADB_URL,
