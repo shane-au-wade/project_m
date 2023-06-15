@@ -1,11 +1,6 @@
-import { converse } from '../../fasb'
+import { converse } from '../../../fasb'
 
-export const config = {
-  runtime: 'edge',
-  regions: 'pdx1', // optional
-}
-
-export default async function handler(request: Request) {
+export async function POST(request: Request) {
   const { query } = await request.json()
   try {
     const message_stream = await converse(query)
@@ -26,13 +21,3 @@ export default async function handler(request: Request) {
     })
   }
 }
-
-// export default function handler(
-//   req: NextApiRequest,
-//   res: NextApiResponse<Data>
-// ) {
-//   res.status(200).json({
-//     name: 'John Doe',
-//     testing: true
-//   })
-// }

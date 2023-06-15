@@ -1,4 +1,4 @@
-import { ChromaClient } from 'chromadb/dist/module'
+import { ChromaClient } from 'chromadb'
 import { OPENAI_API_KEY, CHROMADB_URL } from './config'
 
 import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser'
