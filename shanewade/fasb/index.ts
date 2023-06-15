@@ -186,29 +186,6 @@ export async function converse(query) {
 
   console.log('INFO: embedded query strings')
 
-
-  // ------
-
-  const _chat_system = getChatSystemPrompt('docs_text')
-
-  const completion_playload = {
-    model: 'gpt-3.5-turbo',
-    stream: true,
-    messages: [
-      {
-        role: 'system',
-        content: _chat_system,
-      },
-      ...thread.slice(-5),
-    ],
-  }
-
-  return OpenAIChatCompletionStream(completion_playload)
-
-  // -------
-
-
-
   // find relevant documents
   const fasb_collection = await client.getCollection(collection_config)
   const result = await fasb_collection.query({
@@ -217,6 +194,10 @@ export async function converse(query) {
   })
 
   console.log('INFO: chroma query results', result.ids)
+
+  if (!result) {
+    throw Error('chroma db failure!')
+  }
 
   let [relevant_ids, relevant_docs, relevant_metadatas] = filterQueryResults(
     result.ids,
@@ -255,6 +236,26 @@ export async function converse(query) {
   }
 
   console.log('INFO: relevant_ids', relevant_ids)
+
+  // ------
+
+  const _chat_system = getChatSystemPrompt('docs_text')
+
+  const completion_playload = {
+    model: 'gpt-3.5-turbo',
+    stream: true,
+    messages: [
+      {
+        role: 'system',
+        content: _chat_system,
+      },
+      ...thread.slice(-5),
+    ],
+  }
+
+  return OpenAIChatCompletionStream(completion_playload)
+
+  // -------
 
   const docs_text = formatDocs(relevant_ids, relevant_docs, relevant_metadatas)
 
