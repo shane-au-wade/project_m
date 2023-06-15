@@ -131,6 +131,30 @@ export async function converse(query) {
     content: query,
   })
 
+  const _chat_system = getChatSystemPrompt('docs_text')
+
+  const completion_playload = {
+    model: 'gpt-3.5-turbo',
+    stream: true,
+    messages: [
+      {
+        role: 'system',
+        content: _chat_system,
+      },
+      ...thread.slice(-5),
+    ],
+  }
+
+  return OpenAIChatCompletionStream(completion_playload)
+
+  /// --------
+
+  thread.push({
+    role: 'user',
+    content: query,
+  })
+
+
   const user_messages = thread.filter((chat) => chat.role == 'user')
 
   console.log('INFO: generating response, please wait...')
