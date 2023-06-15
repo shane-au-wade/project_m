@@ -12,6 +12,13 @@ FocusStyleManager.onlyShowFocusOnTabs()
 
 import { TextArea, Button, Spinner, Tag, Icon } from '@blueprintjs/core'
 
+
+import {
+  createParser,
+  ParsedEvent,
+  ReconnectInterval,
+} from "eventsource-parser";
+
 const useStyles = createUseStyles({
   container: {
     height: '100%',
@@ -137,26 +144,38 @@ const Page: NextPage = () => {
       if (!data) {
         return
       }
-      const reader = data.getReader()
 
-      const decoder = new TextDecoder()
-      let done = false
-
-      while (!done) {
-        const { value, done: doneReading } = await reader.read()
-        done = doneReading
-        const chunkValue = decoder.decode(value)
-        // setGeneratedBios((prev) => prev + chunkValue)
-
-        const iterated_state = {
-          ...new_chat_state,
-          chat_history: [...new_chat_state.chat_history],
+      const onParse = (event: ParsedEvent | ReconnectInterval) => {
+        if (event.type === "event") {
+          const data = event.data;
+          try {
+            const text = JSON.parse(data).text ?? ""
+            
+            const iterated_state = {
+              ...new_chat_state,
+              chat_history: [...new_chat_state.chat_history],
+            }
+    
+            iterated_state.chat_history[iterated_state.chat_history.length - 1].message =
+              iterated_state.chat_history[iterated_state.chat_history.length - 1].message + text
+    
+            setState(iterated_state)
+          } catch (e) {
+            console.error(e);
+          }
         }
-
-        iterated_state.chat_history[iterated_state.chat_history.length - 1].message =
-          iterated_state.chat_history[iterated_state.chat_history.length - 1].message + chunkValue
-
-        setState(iterated_state)
+      }
+  
+      // https://web.dev/streams/#the-getreader-and-read-methods
+      const reader = data.getReader();
+      const decoder = new TextDecoder();
+      const parser = createParser(onParse);
+      let done = false;
+      while (!done) {
+        const { value, done: doneReading } = await reader.read();
+        done = doneReading;
+        const chunkValue = decoder.decode(value);
+        parser.feed(chunkValue);
       }
 
       setState((state) => {

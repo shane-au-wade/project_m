@@ -1,6 +1,8 @@
 import { ChromaClient } from 'chromadb'
 import { OPENAI_API_KEY, CHROMADB_URL } from './config'
 
+import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser'
+
 const client = new ChromaClient({
   path: CHROMADB_URL,
 })
@@ -270,13 +272,40 @@ export async function converse(query) {
   return `The system was unable to find ${topic}.  The topic number is incorrect or we are missing some data.`
 }
 
-import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser'
+export interface OpenAIStreamPayload {
+  model: string
+  messages: ChatGPTMessage[]
+  temperature: number
+  top_p: number
+  frequency_penalty: number
+  presence_penalty: number
+  max_tokens: number
+  stream: boolean
+  n: number
+}
 
-export async function OpenAIChatCompletionStream(payload) {
+export type ChatGPTAgent = 'user' | 'system'
+
+export interface ChatGPTMessage {
+  role: ChatGPTAgent
+  content: string
+}
+
+export interface OpenAIStreamPayload {
+  model: string
+  messages: ChatGPTMessage[]
+  temperature: number
+  top_p: number
+  frequency_penalty: number
+  presence_penalty: number
+  max_tokens: number
+  stream: boolean
+  n: number
+}
+
+export async function OpenAIChatCompletionStream(payload: OpenAIStreamPayload) {
   const encoder = new TextEncoder()
   const decoder = new TextDecoder()
-
-  let counter = 0
 
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     headers: {
@@ -287,45 +316,31 @@ export async function OpenAIChatCompletionStream(payload) {
     body: JSON.stringify(payload),
   })
 
-  const stream = new ReadableStream({
+  const readableStream = new ReadableStream({
     async start(controller) {
-      function onParse(event: ParsedEvent | ReconnectInterval) {
+      // callback
+      const onParse = (event: ParsedEvent | ReconnectInterval) => {
         if (event.type === 'event') {
           const data = event.data
-          // console.log(data)
-
-          if (data === '[DONE]') {
-            controller.close()
-            return
-          }
-          try {
-            const json = JSON.parse(data)
-
-            // {
-            //   id: 'chatcmpl-7RVdAEJrhh8hCdkeCnDE77AOLdwMm',
-            //   object: 'chat.completion.chunk',
-            //   created: 1686790800,
-            //   model: 'gpt-3.5-turbo-0301',
-            //   choices: [ { delta: { content: 'TOKEN'}, index: 0, finish_reason: 'stop' } ]
-            // }
-
-            const text = json.choices[0].delta.content ?? ''
-            if (counter < 2 && (text.match(/\n/) || []).length) {
-              return
-            }
-            const queue = encoder.encode(text)
-            controller.enqueue(queue)
-            counter++
-          } catch (e) {
-            controller.error(e)
-          }
+          controller.enqueue(encoder.encode(data))
         }
       }
 
-      // stream response (SSE) from OpenAI may be fragmented into multiple chunks
-      // this ensures we properly read chunks & invoke an event for each SSE event stream
-      const parser = createParser(onParse)
+      // optimistic error handling
+      if (res.status !== 200) {
+        const data = {
+          status: res.status,
+          statusText: res.statusText,
+          body: await res.text(),
+        }
+        console.log(`Error: recieved non-200 status code, ${JSON.stringify(data)}`)
+        controller.close()
+        return
+      }
 
+      // stream response (SSE) from OpenAI may be fragmented into multiple chunks
+      // this ensures we properly read chunks and invoke an event for each SSE event stream
+      const parser = createParser(onParse)
       // https://web.dev/streams/#asynchronous-iteration
       for await (const chunk of res.body as any) {
         parser.feed(decoder.decode(chunk))
@@ -333,5 +348,33 @@ export async function OpenAIChatCompletionStream(payload) {
     },
   })
 
-  return stream
+  let counter = 0
+  const transformStream = new TransformStream({
+    async transform(chunk, controller) {
+      const data = decoder.decode(chunk)
+      // https://beta.openai.com/docs/api-reference/completions/create#completions/create-stream
+      if (data === '[DONE]') {
+        controller.terminate()
+        return
+      }
+      try {
+        const json = JSON.parse(data)
+        const text = json.choices[0].delta?.content || ''
+        if (counter < 2 && (text.match(/\n/) || []).length) {
+          // this is a prefix character (i.e., "\n\n"), do nothing
+          return
+        }
+        // stream transformed JSON resposne as SSE
+        const payload = { text: text }
+        // https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#event_stream_format
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify(payload)}\n\n`))
+        counter++
+      } catch (e) {
+        // maybe parse error
+        controller.error(e)
+      }
+    },
+  })
+
+  return readableStream.pipeThrough(transformStream)
 }
