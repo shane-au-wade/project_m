@@ -21,6 +21,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export const config = {
   runtime: 'edge',
+  regions: 'pdx1', // optional
 }
 
 export default async (request: NextRequest) => {
