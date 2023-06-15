@@ -248,26 +248,6 @@ export async function converse(query) {
 
   console.log('INFO: relevant_ids', relevant_ids)
 
-  // ------
-
-  const _chat_system = getChatSystemPrompt('docs_text')
-
-  const completion_playload = {
-    model: 'gpt-3.5-turbo',
-    stream: true,
-    messages: [
-      {
-        role: 'system',
-        content: _chat_system,
-      },
-      ...thread.slice(-5),
-    ],
-  }
-
-  return OpenAIChatCompletionStream(completion_playload)
-
-  // -------
-
   const docs_text = formatDocs(relevant_ids, relevant_docs, relevant_metadatas)
 
   const chat_prompt = getChatPrompt(query, docs_text)
