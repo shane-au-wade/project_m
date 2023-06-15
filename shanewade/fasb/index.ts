@@ -186,18 +186,28 @@ export async function converse(query) {
 
   console.log('INFO: embedded query strings')
 
+
+  let result
   // find relevant documents
-  const fasb_collection = await client.getCollection(collection_config)
-  const result = await fasb_collection.query({
-    queryEmbeddings: query_embeddings,
-    nResults: 10,
-  })
+  try {
+    const fasb_collection = await client.getCollection(collection_config)
+
+    result = await fasb_collection.query({
+      queryEmbeddings: query_embeddings,
+      nResults: 10,
+    })
+  
+  } catch(error) {
+    console.log(error)
+
+  }
+
+  if(!result) {
+    console.log(result)
+    return 'ERROR with chroma db'
+  }
 
   console.log('INFO: chroma query results', result.ids)
-
-  if (!result) {
-    throw Error('chroma db failure!')
-  }
 
   let [relevant_ids, relevant_docs, relevant_metadatas] = filterQueryResults(
     result.ids,
