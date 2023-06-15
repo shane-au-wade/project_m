@@ -1,12 +1,12 @@
 import { converse } from '../../fasb'
 
-// export const config = {
-//   runtime: 'edge',
-//   regions: 'pdx1', // optional
-// }
+export const config = {
+  runtime: 'edge',
+  regions: 'pdx1', // optional
+}
 
 export default async function handler(request: Request) {
-  const { query } = request.body
+  const { query } = await request.json()
   try {
     const message_stream = await converse(query)
 

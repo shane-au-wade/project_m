@@ -1,4 +1,4 @@
-import { ChromaClient } from 'chromadb'
+import { ChromaClient } from 'chromadb/dist/module'
 import { OPENAI_API_KEY, CHROMADB_URL } from './config'
 
 import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser'
@@ -188,9 +188,10 @@ export async function converse(query) {
 
 
   let result
+  let fasb_collection
   // find relevant documents
   try {
-    const fasb_collection = await client.getCollection(collection_config)
+    fasb_collection = await client.getCollection(collection_config)
 
     result = await fasb_collection.query({
       queryEmbeddings: query_embeddings,
