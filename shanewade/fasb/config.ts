@@ -1,6 +1,10 @@
-export const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+export const OPENAI_API_KEY = process.env.OPENAI_API_KEY ?? null
 
-export const CHROMADB_URL = process.env.CHROMADB_URL ?? "http://localhost:8000"
+if (!OPENAI_API_KEY) {
+  console.warn('No open ai api key present')
+}
+
+export const CHROMADB_URL = process.env.CHROMADB_URL ?? 'http://localhost:8000'
 
 export const MODELS_CONFIG = {
   'gpt-3.5': {
