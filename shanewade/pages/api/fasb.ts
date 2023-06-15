@@ -25,9 +25,7 @@ export const config = {
 
 export default async (request: NextRequest) => {
   const { query } = await request.json()
-  const message = await converse(query)
+  const message_stream = await converse(query)
 
-  return NextResponse.json({
-    message: message,
-  })
+  return new NextResponse(message_stream)
 }

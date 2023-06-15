@@ -255,31 +255,89 @@ export async function converse(query) {
   console.log('INFO: relevant ids contain topic? ', good_query)
 
   if (good_query) {
-    const completion = await fetch('https://api.openai.com/v1/chat/completions', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${OPENAI_API_KEY ?? ''}`,
-      },
-      method: 'POST',
-      body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: chat_system,
-          },
-          ...thread.slice(-5),
-        ],
-      }),
-    })
-    const completion_data = await completion.json()
+    const completion_playload = {
+      model: 'gpt-3.5-turbo',
+      stream: true,
+      messages: [
+        {
+          role: 'system',
+          content: chat_system,
+        },
+        ...thread.slice(-5),
+      ],
+    }
+    // const stream = await
 
-    const ai_response = completion_data.choices[0].message
+    // // thread.push(ai_response)
 
-    thread.push(ai_response)
-
-    return ai_response.content
+    return OpenAIChatCompletionStream(completion_playload)
   }
 
   return `The system was unable to find ${topic}.  The topic number is incorrect or we are missing some data.`
+}
+
+import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser'
+
+export async function OpenAIChatCompletionStream(payload) {
+  const encoder = new TextEncoder()
+  const decoder = new TextDecoder()
+
+  let counter = 0
+
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${OPENAI_API_KEY ?? ''}`,
+    },
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+
+  const stream = new ReadableStream({
+    async start(controller) {
+      function onParse(event: ParsedEvent | ReconnectInterval) {
+        if (event.type === 'event') {
+          const data = event.data
+          // console.log(data)
+
+          if (data === '[DONE]') {
+            controller.close()
+            return
+          }
+          try {
+            const json = JSON.parse(data)
+
+            // {
+            //   id: 'chatcmpl-7RVdAEJrhh8hCdkeCnDE77AOLdwMm',
+            //   object: 'chat.completion.chunk',
+            //   created: 1686790800,
+            //   model: 'gpt-3.5-turbo-0301',
+            //   choices: [ { delta: { content: 'TOKEN'}, index: 0, finish_reason: 'stop' } ]
+            // }
+
+            const text = json.choices[0].delta.content ?? ''
+            if (counter < 2 && (text.match(/\n/) || []).length) {
+              return
+            }
+            const queue = encoder.encode(text)
+            controller.enqueue(queue)
+            counter++
+          } catch (e) {
+            controller.error(e)
+          }
+        }
+      }
+
+      // stream response (SSE) from OpenAI may be fragmented into multiple chunks
+      // this ensures we properly read chunks & invoke an event for each SSE event stream
+      const parser = createParser(onParse)
+
+      // https://web.dev/streams/#asynchronous-iteration
+      for await (const chunk of res.body as any) {
+        parser.feed(decoder.decode(chunk))
+      }
+    },
+  })
+
+  return stream
 }

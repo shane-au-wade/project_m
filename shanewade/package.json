@@ -11,6 +11,7 @@
     "@blueprintjs/core": "^4.18.0",
     "@blueprintjs/popover2": "^0.12.9",
     "chromadb": "^1.5.2",
+    "eventsource-parser": "^1.0.0",
     "heatmapjs": "^2.0.2",
     "leaflet": "^1.7.1",
     "leaflet-heatmap": "^1.0.0",

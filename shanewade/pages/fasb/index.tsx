@@ -101,9 +101,18 @@ const Page: NextPage = () => {
       chat_history: [
         ...state.chat_history,
         {
-          user_short_id: 'na',
+          user_short_id: 'user',
           timestamp: 'na',
           message: new_message,
+          message_id: 'test',
+          links: [], // a list of urls that we used to generate the response
+          suggestions: [], // a list of AI generated follow up questions
+          downloads: {}, // { file_name: url_for_file }
+        },
+        {
+          user_short_id: 'ai',
+          timestamp: 'na',
+          message: '',
           message_id: 'test',
           links: [], // a list of urls that we used to generate the response
           suggestions: [], // a list of AI generated follow up questions
@@ -112,34 +121,51 @@ const Page: NextPage = () => {
       ],
     }
 
-    putNewChatMessage(new_message).then(async (res) => {
-      const data: {
-        chat_id: String
-        message: String
-        products: []
-      } = await res.json()
-
-      console.log(data)
-
-      setState({
-        ...new_chat_state,
-        model_state: 'READY',
-        chat_history: [
-          ...new_chat_state.chat_history,
-          {
-            user_short_id: 'ai',
-            timestamp: 'na',
-            message: data.message,
-            message_id: 'test',
-            links: [], // a list of urls that we used to generate the response
-            suggestions: [], // a list of AI generated follow up questions
-            downloads: {}, // { file_name: url_for_file }
-          },
-        ],
-      })
-    })
     // submitMessageAndGenerateResponse(new_message, `${user.given_name.charAt(0)}`, state, setState)
     setState(new_chat_state)
+
+    putNewChatMessage(new_message).then(async (res) => {
+      // const data: {
+      //   chat_id: String
+      //   message: String
+      //   products: []
+      // } = await res.json()
+
+      // console.log(data)
+
+      const data = res.body
+      if (!data) {
+        return
+      }
+      const reader = data.getReader()
+
+      const decoder = new TextDecoder()
+      let done = false
+
+      while (!done) {
+        const { value, done: doneReading } = await reader.read()
+        done = doneReading
+        const chunkValue = decoder.decode(value)
+        // setGeneratedBios((prev) => prev + chunkValue)
+
+        const iterated_state = {
+          ...new_chat_state,
+          chat_history: [...new_chat_state.chat_history],
+        }
+
+        iterated_state.chat_history[iterated_state.chat_history.length - 1].message =
+          iterated_state.chat_history[iterated_state.chat_history.length - 1].message + chunkValue
+
+        setState(iterated_state)
+      }
+
+      setState((state) => {
+        return {
+          ...state,
+          model_state: 'READY',
+        }
+      })
+    })
   }, [message_ref, message, state])
 
   const updateMessage = React.useCallback(

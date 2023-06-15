@@ -1,4 +1,4 @@
-export const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+export const OPENAI_API_KEY = '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'
 
 export const CHROMADB_URL = process.env.CHROMADB_URL ?? "http://localhost:8000"
 
