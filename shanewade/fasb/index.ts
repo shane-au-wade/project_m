@@ -1,12 +1,6 @@
 const { ChromaClient } = require('chromadb')
-const { Configuration, OpenAIApi } = require('openai')
 const { OPENAI_API_KEY, CHROMADB_URL } = require('./config')
 
-const configuration = new Configuration({
-  apiKey: OPENAI_API_KEY,
-})
-
-const openai = new OpenAIApi(configuration)
 const client = new ChromaClient({
   path: CHROMADB_URL,
 })
