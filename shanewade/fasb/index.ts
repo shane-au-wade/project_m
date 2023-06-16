@@ -186,7 +186,6 @@ export async function converse(query) {
 
   console.log('INFO: embedded query strings')
 
-
   let result
   let fasb_collection
   // find relevant documents
@@ -197,13 +196,11 @@ export async function converse(query) {
       queryEmbeddings: query_embeddings,
       nResults: 10,
     })
-  
-  } catch(error) {
+  } catch (error) {
     console.log(error)
-
   }
 
-  if(!result) {
+  if (!result) {
     console.log(result)
     return 'ERROR with chroma db'
   }
@@ -281,7 +278,7 @@ export async function converse(query) {
 
     // // thread.push(ai_response)
 
-    return OpenAIChatCompletionStream(completion_playload)
+    return OpenAIChatCompletionStream(completion_playload, ['\n\n', `Topics Read:\n${relevant_ids.join('\n')}`])
   }
 
   return `The system was unable to find ${topic}.  The topic number is incorrect or we are missing some data.`
@@ -318,7 +315,7 @@ export interface OpenAIStreamPayload {
   n: number
 }
 
-export async function OpenAIChatCompletionStream(payload: OpenAIStreamPayload) {
+export async function OpenAIChatCompletionStream(payload: OpenAIStreamPayload, meta_data) {
   const encoder = new TextEncoder()
   const decoder = new TextDecoder()
 
@@ -369,9 +366,29 @@ export async function OpenAIChatCompletionStream(payload: OpenAIStreamPayload) {
       const data = decoder.decode(chunk)
       // https://beta.openai.com/docs/api-reference/completions/create#completions/create-stream
       if (data === '[DONE]') {
+        // stream additional string meta data
+
+        for await (const entry of meta_data as string) {
+          controller.enqueue(
+            encoder.encode(
+              `data: ${JSON.stringify({
+                text: `${entry}`,
+              })}\n\n`
+            )
+          )
+        }
+
+        controller.enqueue(encoder.encode('[*DONE]'))
+
+        // controller.terminate()
+        // return
+      }
+
+      if (data === '[*DONE]') {
         controller.terminate()
         return
       }
+
       try {
         const json = JSON.parse(data)
         const text = json.choices[0].delta?.content || ''
