@@ -7,11 +7,10 @@ import { createUseStyles } from 'react-jss'
 import '@blueprintjs/core/lib/css/blueprint.css'
 import '@blueprintjs/icons/lib/css/blueprint-icons.css'
 import '@blueprintjs/popover2/lib/css/blueprint-popover2.css'
-import { FocusStyleManager } from '@blueprintjs/core'
+import { FocusStyleManager, OverflowList } from '@blueprintjs/core'
 FocusStyleManager.onlyShowFocusOnTabs()
 
-import { TextArea, Button, Spinner, Tag, Icon } from '@blueprintjs/core'
-
+import { TextArea, Button, Spinner, Tag, Icon, useHotkeys } from '@blueprintjs/core'
 
 import {
   createParser,
@@ -24,11 +23,11 @@ const useStyles = createUseStyles({
     height: '100%',
     width: '100%',
     // backgroundColor: 'black',
-    display: 'grid',
+    // display: 'grid',
   },
 
   pageContent: {
-    alignSelf: 'center',
+  //  / alignSelf: 'center',
     margin: '0 auto',
     height: '100%',
     display: 'flex',
@@ -90,6 +89,16 @@ const Page: NextPage = () => {
   const message_ref = React.useRef<HTMLInputElement>(null)
   const message = React.useRef<String>('')
 
+  React.useLayoutEffect(() => {
+    if(!state.chat_history) return
+    console.log('reading chat history')
+    const _chat_history = JSON.parse(window.localStorage.getItem('user-chat') ?? '[]')
+    setState({
+      ...state,
+      chat_history: [..._chat_history]
+    })
+  }, [])
+
   const handleSubmit = React.useCallback(() => {
     if (message.current == '') return
     if (state.model_state == 'GENERATING') return
@@ -105,6 +114,7 @@ const Page: NextPage = () => {
     const new_chat_state: ChatState = {
       ...state,
       model_state: 'GENERATING',
+      // model_state: 'READY',
       chat_history: [
         ...state.chat_history,
         {
@@ -130,6 +140,9 @@ const Page: NextPage = () => {
 
     // submitMessageAndGenerateResponse(new_message, `${user.given_name.charAt(0)}`, state, setState)
     setState(new_chat_state)
+
+    // store the last 100 entries of the chat in localStorage
+    window.localStorage.setItem('user-chat', JSON.stringify(new_chat_state.chat_history.slice(0, 100)))
 
     putNewChatMessage(new_message).then(async (res) => {
       // const data: {
@@ -179,11 +192,15 @@ const Page: NextPage = () => {
       }
 
       setState((state) => {
+        // store the last 100 entries of the chat in localStorage
+        window.localStorage.setItem('user-chat', JSON.stringify(new_chat_state.chat_history.slice(0, 100)))
         return {
           ...state,
           model_state: 'READY',
         }
       })
+
+
     })
   }, [message_ref, message, state])
 
@@ -195,8 +212,32 @@ const Page: NextPage = () => {
     [message_ref, message]
   )
 
+  const hotkeys = React.useMemo(
+    () => [
+      {
+        combo: 'enter',
+        global: true,
+        allowInInput: true,
+        label: 'text input',
+        onKeyDown: handleSubmit,
+        preventDefault: true,
+      },
+    ],
+    [handleSubmit]
+  )
+
+
+
+  const { handleKeyDown } = useHotkeys(hotkeys,{})
+
+  const chat_anchor_ref = React.useRef<HTMLDivElement>(null)
+  React.useEffect(() => {
+    if (!chat_anchor_ref.current) return
+    chat_anchor_ref.current.scrollIntoView()
+  }, [state.chat_history])
+
   return (
-    <div className={classes.container}>
+    <div className={classes.container} onKeyDown={handleKeyDown}>
       <div className={classes.pageContent}>
         <div style={{ flexGrow: 1 }} />
         <div
@@ -206,6 +247,8 @@ const Page: NextPage = () => {
             display: 'flex',
             flexDirection: 'column',
             gap: '0.5rem',
+            maxHeight: '100%',
+            overflowY: 'auto',
           }}
         >
           {state.chat_history.map((chat_msg, index) => (
@@ -255,6 +298,7 @@ const Page: NextPage = () => {
               )}
             </div>
           ))}
+          <div ref={chat_anchor_ref}></div>
         </div>
 
         <div
@@ -308,7 +352,21 @@ const Page: NextPage = () => {
               }}
             />
           </div>
-          <div style={{ height: '5rem' }} />
+          <div style={{ height: '5rem' }} >{
+            state.chat_history.at(-1)?.message !== '' ?
+            <Button large minimal icon='repeat' text='Resend' disabled={true}/> :
+            <Button large minimal intent='primary' icon='repeat' text='Resend' disabled={false} onClick={() => {
+              console.log('resubmitting last message')
+            }}/>
+          }
+          <br/>
+          <sub style={{
+            padding: '1rem'
+          }}>
+            *the last 100 messages are stored locally via cookies
+          </sub>
+
+          </div>
         </div>
       </div>
     </div>
