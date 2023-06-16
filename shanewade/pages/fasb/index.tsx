@@ -12,11 +12,7 @@ FocusStyleManager.onlyShowFocusOnTabs()
 
 import { TextArea, Button, Spinner, Tag, Icon, useHotkeys } from '@blueprintjs/core'
 
-import {
-  createParser,
-  ParsedEvent,
-  ReconnectInterval,
-} from "eventsource-parser";
+import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser'
 
 const useStyles = createUseStyles({
   container: {
@@ -27,7 +23,7 @@ const useStyles = createUseStyles({
   },
 
   pageContent: {
-  //  / alignSelf: 'center',
+    //  / alignSelf: 'center',
     margin: '0 auto',
     height: '100%',
     display: 'flex',
@@ -90,12 +86,12 @@ const Page: NextPage = () => {
   const message = React.useRef<String>('')
 
   React.useLayoutEffect(() => {
-    if(!state.chat_history) return
+    if (!state.chat_history) return
     console.log('reading chat history')
     const _chat_history = JSON.parse(window.localStorage.getItem('user-chat') ?? '[]')
     setState({
       ...state,
-      chat_history: [..._chat_history]
+      chat_history: [..._chat_history],
     })
   }, [])
 
@@ -159,36 +155,36 @@ const Page: NextPage = () => {
       }
 
       const onParse = (event: ParsedEvent | ReconnectInterval) => {
-        if (event.type === "event") {
-          const data = event.data;
+        if (event.type === 'event') {
+          const data = event.data
           try {
-            const text = JSON.parse(data).text ?? ""
-            
+            const text = JSON.parse(data).text ?? ''
+
             const iterated_state = {
               ...new_chat_state,
               chat_history: [...new_chat_state.chat_history],
             }
-    
+
             iterated_state.chat_history[iterated_state.chat_history.length - 1].message =
               iterated_state.chat_history[iterated_state.chat_history.length - 1].message + text
-    
+
             setState(iterated_state)
           } catch (e) {
-            console.error(e);
+            console.error(e)
           }
         }
       }
-  
+
       // https://web.dev/streams/#the-getreader-and-read-methods
-      const reader = data.getReader();
-      const decoder = new TextDecoder();
-      const parser = createParser(onParse);
-      let done = false;
+      const reader = data.getReader()
+      const decoder = new TextDecoder()
+      const parser = createParser(onParse)
+      let done = false
       while (!done) {
-        const { value, done: doneReading } = await reader.read();
-        done = doneReading;
-        const chunkValue = decoder.decode(value);
-        parser.feed(chunkValue);
+        const { value, done: doneReading } = await reader.read()
+        done = doneReading
+        const chunkValue = decoder.decode(value)
+        parser.feed(chunkValue)
       }
 
       setState((state) => {
@@ -199,8 +195,6 @@ const Page: NextPage = () => {
           model_state: 'READY',
         }
       })
-
-
     })
   }, [message_ref, message, state])
 
@@ -226,9 +220,7 @@ const Page: NextPage = () => {
     [handleSubmit]
   )
 
-
-
-  const { handleKeyDown } = useHotkeys(hotkeys,{})
+  const { handleKeyDown } = useHotkeys(hotkeys, {})
 
   const chat_anchor_ref = React.useRef<HTMLDivElement>(null)
   React.useEffect(() => {
@@ -352,20 +344,89 @@ const Page: NextPage = () => {
               }}
             />
           </div>
-          <div style={{ height: '5rem' }} >{
-            state.chat_history.at(-1)?.message !== '' ?
-            <Button large minimal icon='repeat' text='Resend' disabled={true}/> :
-            <Button large minimal intent='primary' icon='repeat' text='Resend' disabled={false} onClick={() => {
-              console.log('resubmitting last message')
-            }}/>
-          }
-          <br/>
-          <sub style={{
-            padding: '1rem'
-          }}>
-            *the last 100 messages are stored locally via cookies
-          </sub>
+          <div style={{ height: '5rem' }}>
+            {state.chat_history.at(-1)?.message !== '' || state.model_state == 'GENERATING' ? (
+              <Button large minimal icon="repeat" text="Resend" disabled={true} />
+            ) : (
+              <Button
+                large
+                minimal
+                intent="primary"
+                icon="repeat"
+                text="Resend"
+                onClick={() => {
+                  console.log('resubmitting last message')
 
+                  const new_message = state.chat_history.at(-2)?.message
+
+                  const new_chat_state: ChatState = {
+                    ...state,
+                    chat_history: [...state.chat_history],
+                  }
+
+                  if (!new_message) return
+
+                  putNewChatMessage(new_message).then(async (res) => {
+                    const data = res.body
+                    if (!data) {
+                      return
+                    }
+                    const onParse = (event: ParsedEvent | ReconnectInterval) => {
+                      if (event.type === 'event') {
+                        const data = event.data
+                        try {
+                          const text = JSON.parse(data).text ?? ''
+
+                          const iterated_state = {
+                            ...new_chat_state,
+                            chat_history: [...new_chat_state.chat_history],
+                          }
+
+                          iterated_state.chat_history[iterated_state.chat_history.length - 1].message =
+                            iterated_state.chat_history[iterated_state.chat_history.length - 1].message + text
+
+                          setState(iterated_state)
+                        } catch (e) {
+                          console.error(e)
+                        }
+                      }
+                    }
+
+                    // https://web.dev/streams/#the-getreader-and-read-methods
+                    const reader = data.getReader()
+                    const decoder = new TextDecoder()
+                    const parser = createParser(onParse)
+                    let done = false
+                    while (!done) {
+                      const { value, done: doneReading } = await reader.read()
+                      done = doneReading
+                      const chunkValue = decoder.decode(value)
+                      parser.feed(chunkValue)
+                    }
+
+                    setState((state) => {
+                      // store the last 100 entries of the chat in localStorage
+                      window.localStorage.setItem(
+                        'user-chat',
+                        JSON.stringify(new_chat_state.chat_history.slice(0, 100))
+                      )
+                      return {
+                        ...state,
+                        model_state: 'READY',
+                      }
+                    })
+                  })
+                }}
+              />
+            )}
+            <br />
+            <sub
+              style={{
+                padding: '1rem',
+              }}
+            >
+              *the last 100 messages are stored locally via cookies
+            </sub>
           </div>
         </div>
       </div>
