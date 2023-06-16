@@ -10,7 +10,8 @@ import '@blueprintjs/popover2/lib/css/blueprint-popover2.css'
 import { FocusStyleManager, OverflowList } from '@blueprintjs/core'
 FocusStyleManager.onlyShowFocusOnTabs()
 
-import { TextArea, Button, Spinner, Tag, Icon, useHotkeys } from '@blueprintjs/core'
+import { TextArea, Button, Spinner, Tag, Icon, useHotkeys, Menu, MenuItem } from '@blueprintjs/core'
+import { Popover2 } from '@blueprintjs/popover2'
 
 import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser'
 
@@ -28,7 +29,7 @@ const useStyles = createUseStyles({
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    padding: '5px',
+    // padding: '0px',
     width: '100%',
     '@media (min-width: 800px)': {
       maxWidth: '50rem',
@@ -254,38 +255,65 @@ const Page: NextPage = () => {
             >
               {chat_msg.user_short_id == 'ai' ? (
                 <>
-                  <p
-                    style={{
-                      whiteSpace: 'pre-line',
-                      maxWidth: '45rem',
-                      minWidth: '20rem',
-                      backgroundColor: '#E5E8EB',
-                      color: 'black',
-                      fontSize: '1.25rem',
-                      padding: '0.5rem',
-                      borderRadius: '7px',
-                    }}
-                  >
-                    {chat_msg.message}
-                  </p>
+                  <div style={{ display: 'flex' }}>
+                    <p
+                      style={{
+                        whiteSpace: 'pre-line',
+                        maxWidth: '45rem',
+                        minWidth: '20rem',
+                        backgroundColor: '#E5E8EB',
+                        color: 'black',
+                        fontSize: '1.25rem',
+                        padding: '0.5rem',
+                        borderRadius: '7px',
+                      }}
+                    >
+                      {chat_msg.message}
+                    </p>
+                    <div style={{ }}>
+                      <Button
+                        minimal
+                        icon="clipboard"
+                        onClick={() => {
+                          navigator.clipboard.writeText(String(chat_msg.message)).then(() => {
+                            console.log('copied chat message')
+                          })
+                        }}
+                      />
+                    </div>
+                  </div>
                   <div style={{ flexGrow: '1' }} />
                 </>
               ) : (
                 <>
                   <div style={{ flexGrow: '1' }} />
-                  <p
-                    style={{
-                      maxWidth: '35rem',
-                      minWidth: '20rem',
-                      backgroundColor: '#184A90',
-                      color: 'floralWhite',
-                      fontSize: '1.25rem',
-                      padding: '0.5rem',
-                      borderRadius: '7px',
-                    }}
-                  >
-                    {chat_msg.message}
-                  </p>
+                  <div style={{ display: 'flex' }}>
+                    <p
+                      style={{
+                        maxWidth: '35rem',
+                        minWidth: '20rem',
+                        backgroundColor: '#184A90',
+                        color: 'floralWhite',
+                        fontSize: '1.25rem',
+                        padding: '0.5rem',
+                        borderRadius: '7px',
+                      }}
+                    >
+                      {chat_msg.message}
+                    </p>
+                    <div >
+                      <Button
+                        minimal
+                        intent="primary"
+                        icon="clipboard"
+                        onClick={() => {
+                          navigator.clipboard.writeText(String(chat_msg.message)).then(() => {
+                            console.log('copied chat message')
+                          })
+                        }}
+                      />
+                    </div>
+                  </div>
                 </>
               )}
             </div>
@@ -419,14 +447,37 @@ const Page: NextPage = () => {
                 }}
               />
             )}
+            <Popover2
+              content={
+                <Menu>
+                  <MenuItem text="gpt-3.5-turbo" />
+                  <MenuItem text="gpt-4" />
+                </Menu>
+              }
+              minimal
+              position="bottom-left"
+              disabled
+            >
+              <Button
+                minimal
+                outlined
+                disabled
+                text="gpt-3.5-turbo"
+                icon="predictive-analysis"
+                rightIcon="caret-down"
+              />
+            </Popover2>
             <br />
-            <sub
+            <div
               style={{
                 padding: '1rem',
+                paddingTop: '0',
+                width: '100%',
               }}
             >
-              *the last 100 messages are stored locally via cookies
-            </sub>
+              <sub>*the last 100 messages are stored locally via cookies.</sub>
+              <br />
+            </div>
           </div>
         </div>
       </div>
