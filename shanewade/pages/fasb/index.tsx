@@ -55,6 +55,67 @@ type ChatState = {
   thread_id: Number | null
 }
 
+const initial_chat_history: Array<ChatMessage> = [
+  {
+    user_short_id: 'ai',
+    timestamp: 'na',
+    message: `Hello and welcome to your AI-powered accounting assistant!
+
+I'm here to help you navigate the complexities of the FASB Accounting Standards Codification. Using advanced AI technology, I can assist with:
+
+1. Summarizing and explaining complex accounting standards.
+2. Guiding you through challenging transactions.
+3. Answering your technical accounting queries.
+4. Assisting in the creation of technical memos by finding relevant guidance.
+
+Simply type your question or prompt in the chat, and I'll provide you with a detailed response based on the FASB Codification.
+
+Remember, while I strive for accuracy, it's essential to cross-verify the information I provide against the actual FASB Codification.
+
+Ready to begin? Let's make accounting easier together!`,
+    message_id: 'test',
+    links: [], // a list of urls that we used to generate the response
+    suggestions: [], // a list of AI generated follow up questions
+    downloads: {}, // { file_name: url_for_file }
+  },
+  {
+    user_short_id: 'ai',
+    timestamp: 'na',
+    message: `Here are some examples of prompts you could use`,
+    message_id: 'test',
+    links: [], // a list of urls that we used to generate the response
+    suggestions: [], // a list of AI generated follow up questions
+    downloads: {}, // { file_name: url_for_file }
+  },
+  {
+    user_short_id: 'ai',
+    timestamp: 'na',
+    message: `Can you recommend some steps to take to recognize revenue from contracts with customers?`,
+    message_id: 'test',
+    links: [], // a list of urls that we used to generate the response
+    suggestions: [], // a list of AI generated follow up questions
+    downloads: {}, // { file_name: url_for_file }
+  },
+  {
+    user_short_id: 'ai',
+    timestamp: 'na',
+    message: `What are the key steps in impairment testing for goodwill under ASC 350?`,
+    message_id: 'test',
+    links: [], // a list of urls that we used to generate the response
+    suggestions: [], // a list of AI generated follow up questions
+    downloads: {}, // { file_name: url_for_file }
+  },
+  {
+    user_short_id: 'ai',
+    timestamp: 'na',
+    message: `Can you provide the FASB guidance related to accounting for software development costs?`,
+    message_id: 'test',
+    links: [], // a list of urls that we used to generate the response
+    suggestions: [], // a list of AI generated follow up questions
+    downloads: {}, // { file_name: url_for_file }
+  },
+]
+
 const DEFAULT_FETCH_OPTIONS: RequestInit = {
   credentials: 'include',
 }
@@ -89,7 +150,12 @@ const Page: NextPage = () => {
   React.useLayoutEffect(() => {
     if (!state.chat_history) return
     console.log('reading chat history')
-    const _chat_history = JSON.parse(window.localStorage.getItem('user-chat') ?? '[]')
+    let _chat_history = JSON.parse(window.localStorage.getItem('user-chat') ?? '[]')
+
+    if (_chat_history.length == 0) {
+      _chat_history = initial_chat_history
+    }
+
     setState({
       ...state,
       chat_history: [..._chat_history],
@@ -256,6 +322,17 @@ const Page: NextPage = () => {
               {chat_msg.user_short_id == 'ai' ? (
                 <>
                   <div style={{ display: 'flex' }}>
+                    <div style={{}}>
+                      <Button
+                        minimal
+                        icon="clipboard"
+                        onClick={() => {
+                          navigator.clipboard.writeText(String(chat_msg.message)).then(() => {
+                            console.log('copied chat message')
+                          })
+                        }}
+                      />
+                    </div>
                     <p
                       style={{
                         whiteSpace: 'pre-line',
@@ -270,17 +347,6 @@ const Page: NextPage = () => {
                     >
                       {chat_msg.message}
                     </p>
-                    <div style={{ }}>
-                      <Button
-                        minimal
-                        icon="clipboard"
-                        onClick={() => {
-                          navigator.clipboard.writeText(String(chat_msg.message)).then(() => {
-                            console.log('copied chat message')
-                          })
-                        }}
-                      />
-                    </div>
                   </div>
                   <div style={{ flexGrow: '1' }} />
                 </>
@@ -301,7 +367,7 @@ const Page: NextPage = () => {
                     >
                       {chat_msg.message}
                     </p>
-                    <div >
+                    <div>
                       <Button
                         minimal
                         intent="primary"
