@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
+import Link from 'next/link'
 
 // <Setup Blueprint>
 import '@blueprintjs/core/lib/css/blueprint.css'
@@ -352,14 +353,83 @@ const Home: NextPage = () => {
       </div>
 
       {/* page content container  */}
-      <div style={{ padding: '1rem', maxWidth: '80rem', margin: 'auto' }}>
-        <h2 style={{ marginTop: '0' }}>Products</h2>
+      <div style={{ padding: '0rem', maxWidth: '80rem', margin: 'auto' }}>
+        <h2 style={{ marginTop: '0' }}>Current Projects</h2>
         <br />
-        <section style={{ padding: '1rem' }}>
+        <section style={{ padding: '1rem', display: 'flex', gap: '1rem', overflowX: 'auto' }}>
           <Card
             elevation={1}
             style={{
               maxWidth: '25rem',
+              minWidth: '20rem',
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <div
+              style={{
+                textAlign: 'left',
+                display: 'flex',
+                gap: '0.5rem',
+              }}
+            >
+              <Tag intent="primary">Ideation</Tag>
+              <Tag intent="primary">Validation</Tag>
+              <Tag intent="none">Prototype</Tag>
+            </div>
+            <br />
+            <Image
+              src="/fasb_logo.png"
+              alt="Financial accounting standards board logo, no background"
+              height={100}
+              width={250}
+              style={{
+                height: '8rem',
+                width: '10rem',
+                margin: '0 auto',
+              }}
+            />
+            <br />
+            <h3>
+              <Link href="/fasb">FASB ASC Chat</Link>
+            </h3>
+            <p>AI for the FASB Accounting Standards Codification</p>
+            <br />
+            <summary style={{ textAlign: 'left' }}>
+              <p>
+                This chat demo serves as a proof of concept that AI software can be benificial in the technical
+                accounting field. I built this P.O.C for myself to understand if it was even possible. Now I am
+                validating this concept with the intent of building a startup.
+              </p>
+              <p>This prototype is open for evaluation, feel free to try it out and DM me on linkedin.</p>
+              <div style={{ textAlign: 'center', padding: '1rem' }}>
+                <Button
+                  text="Start FASB Chat"
+                  intent="success"
+                  onClick={() => {
+                    router.push('/fasb')
+                  }}
+                ></Button>
+              </div>
+              <p>
+                Tested by <a href="https://www.linkedin.com/in/ryanfrederickmuller/">Ryan Müller CA(SA), CPA</a>
+              </p>
+              <p>
+                Ryan was able to give the system context of a transaction then
+                <ul style={{margin: '0', paddingLeft: '1rem'}}>
+                  <li>generate accounting implications based on relevant asc guidance</li>
+                  <li>generate an impairment accounting memo based on the accounting implication conclusion</li>
+                  <li>create a draft journal entry for the transaction</li>
+                </ul>
+              </p>
+            </summary>
+          </Card>
+          <Card
+            elevation={1}
+            style={{
+              maxWidth: '25rem',
+              minWidth: '20rem',
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
@@ -372,6 +442,7 @@ const Home: NextPage = () => {
             >
               <Tag intent="success">Deployed</Tag>
             </div>
+            <br />
             <Image
               src="/low_poly_torch.png"
               alt="immigration gpt torch logo"
