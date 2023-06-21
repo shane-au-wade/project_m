@@ -1,9 +1,9 @@
 import { converse } from '../../../fasb'
 
 export async function POST(request: Request) {
-  const { query } = await request.json()
+  const { query, model } = await request.json()
   try {
-    const message_stream = await converse(query)
+    const message_stream = await converse(query, model ? model : 'gpt-3.5-turbo-16k')
 
     return new Response(message_stream, {
       headers: new Headers({

@@ -175,7 +175,7 @@ const Home: NextPage = () => {
   const projects_ref = React.useRef<HTMLElement | null>(null)
   const prototypes_ref = React.useRef<HTMLElement | null>(null)
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     if (!blogs_ref.current) return
     if (!prototypes_ref.current) return
     if (!projects_ref.current) return
@@ -384,6 +384,7 @@ const Home: NextPage = () => {
               alt="Financial accounting standards board logo, no background"
               height={100}
               width={250}
+              priority
               style={{
                 height: '8rem',
                 width: '10rem',

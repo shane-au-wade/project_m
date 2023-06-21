@@ -119,13 +119,45 @@ NEW QUERY STRINGS:
 `
 }
 
-function findAscTopicNumber(str) {
+function findAscTopicNumber(str: string) {
   // The regex matches numbers separated by dashes, up to 4 segments (e.g. 606, 840-30, 707-10-10, 101-10-10-1)
-  const match = str.match(/(\d+(-\d+){0,3})/)
-  return match ? match[0] : null
+  const regex = /\b\d+(\-\d+)*\b/g
+  const matchs = str.match(regex)
+
+  const topics = [
+    105, 205, 210, 215, 220, 225, 230, 235, 250, 255, 260, 270, 272, 274, 275, 280, 305, 310, 320, 321, 323, 325, 326,
+    330, 340, 350, 360, 405, 410, 420, 430, 440, 450, 460, 470, 480, 505, 605, 606, 610, 705, 710, 712, 715, 718, 720,
+    730, 740, 805, 808, 810, 815, 820, 825, 830, 832, 835, 840, 842, 845, 848, 850, 852, 853, 855, 860, 905, 908, 910,
+    912, 915, 920, 922, 924, 926, 928, 930, 932, 940, 942, 944, 946, 948, 950, 952, 954, 958, 960, 962, 965, 970, 972,
+    974, 976, 978, 980, 985, 995,
+  ]
+
+  function filter_topics(_matchs: Array<string>) {
+    const final_topics = []
+
+    for (const match of _matchs) {
+      if (match.length == 3 && topics.includes(parseInt(match))) final_topics.push(match)
+
+      const regex = /^(\d+)-/
+      const main_topic = match.match(regex)
+      if (main_topic && main_topic[1].length == 3 && topics.includes(parseInt(main_topic[1]))) final_topics.push(match)
+    }
+
+    return final_topics
+  }
+
+  return matchs ? filter_topics(matchs) : []
 }
 
-export async function converse(query) {
+type Models =
+  | 'gpt-3.5-turbo-16k-0613'
+  | 'gpt-3.5-turbo-16k'
+  | 'gpt-3.5-turbo-0613'
+  | 'gpt-3.5-turbo'
+  | 'gpt-4-0613'
+  | 'gpt-4'
+
+export async function converse(query, model: Models) {
   thread.push({
     role: 'user',
     content: query,
@@ -136,7 +168,8 @@ export async function converse(query) {
   console.log('INFO: generating response, please wait...')
 
   // asc topic extraction
-  const topic = findAscTopicNumber(query)
+  const _topics = findAscTopicNumber(query)
+  const topic = _topics ? _topics[0] : null
 
   console.log('INFO: asc topic detected: ', topic)
 
@@ -263,8 +296,10 @@ export async function converse(query) {
   console.log('INFO: relevant ids contain topic? ', good_query)
 
   if (good_query) {
+    console.log('INFO: using model ', model)
+
     const completion_playload = {
-      model: 'gpt-3.5-turbo-16k',
+      model: model,
       stream: true,
       messages: [
         {

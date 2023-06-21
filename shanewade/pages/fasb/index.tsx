@@ -7,7 +7,7 @@ import { createUseStyles } from 'react-jss'
 import '@blueprintjs/core/lib/css/blueprint.css'
 import '@blueprintjs/icons/lib/css/blueprint-icons.css'
 import '@blueprintjs/popover2/lib/css/blueprint-popover2.css'
-import { FocusStyleManager, OverflowList } from '@blueprintjs/core'
+import { FocusStyleManager, HTMLSelect, OverflowList } from '@blueprintjs/core'
 FocusStyleManager.onlyShowFocusOnTabs()
 
 import { TextArea, Button, Spinner, Tag, Icon, useHotkeys, Menu, MenuItem } from '@blueprintjs/core'
@@ -119,9 +119,12 @@ Ready to begin? Let's make accounting easier together!`,
 const DEFAULT_FETCH_OPTIONS: RequestInit = {
   credentials: 'include',
 }
-function putNewChatMessage(message: String) {
+function putNewChatMessage(message: String, model: String) {
+  const asc_topics = findAscTopicNumber(message.toString())
   const new_message = {
     query: message,
+    topics: asc_topics,
+    model: model,
   }
   console.log(new_message)
   return fetch('/api/fasb', {
@@ -134,11 +137,49 @@ function putNewChatMessage(message: String) {
   })
 }
 
+function findAscTopicNumber(str: string) {
+  // The regex matches numbers separated by dashes, up to 4 segments (e.g. 606, 840-30, 707-10-10, 101-10-10-1)
+  const regex = /\b\d+(\-\d+)*\b/g
+  const matchs = str.match(regex)
+
+  const topics = [
+    105, 205, 210, 215, 220, 225, 230, 235, 250, 255, 260, 270, 272, 274, 275, 280, 305, 310, 320, 321, 323, 325, 326,
+    330, 340, 350, 360, 405, 410, 420, 430, 440, 450, 460, 470, 480, 505, 605, 606, 610, 705, 710, 712, 715, 718, 720,
+    730, 740, 805, 808, 810, 815, 820, 825, 830, 832, 835, 840, 842, 845, 848, 850, 852, 853, 855, 860, 905, 908, 910,
+    912, 915, 920, 922, 924, 926, 928, 930, 932, 940, 942, 944, 946, 948, 950, 952, 954, 958, 960, 962, 965, 970, 972,
+    974, 976, 978, 980, 985, 995,
+  ]
+
+  function filter_topics(_matchs: Array<string>) {
+    const final_topics = []
+
+    for (const match of _matchs) {
+      if (match.length == 3 && topics.includes(parseInt(match))) final_topics.push(match)
+
+      const regex = /^(\d+)-/
+      const main_topic = match.match(regex)
+      if (main_topic && main_topic[1].length == 3 && topics.includes(parseInt(main_topic[1]))) final_topics.push(match)
+    }
+
+    return final_topics
+  }
+
+  return matchs ? filter_topics(matchs) : []
+}
+
 const INIT_CHAT_STATE: ChatState = {
   model_state: 'READY',
   chat_history: [],
   thread_id: null,
 }
+
+type Models =
+  | 'gpt-3.5-turbo-16k-0613'
+  | 'gpt-3.5-turbo-16k'
+  | 'gpt-3.5-turbo-0613'
+  | 'gpt-3.5-turbo'
+  | 'gpt-4-0613'
+  | 'gpt-4'
 
 const Page: NextPage = () => {
   const classes = useStyles()
@@ -146,19 +187,24 @@ const Page: NextPage = () => {
   const [state, setState] = React.useState<ChatState>(INIT_CHAT_STATE)
   const message_ref = React.useRef<HTMLInputElement>(null)
   const message = React.useRef<String>('')
+  const process_message_timeout = React.useRef<number>()
+  const [topics, setTopics] = React.useState<Array<string>>([])
 
-  React.useLayoutEffect(() => {
-    if (!state.chat_history) return
-    console.log('reading chat history')
-    let _chat_history = JSON.parse(window.localStorage.getItem('user-chat') ?? '[]')
+  const [model, setModel] = React.useState<Models>('gpt-3.5-turbo-16k')
 
-    if (_chat_history.length == 0) {
-      _chat_history = initial_chat_history
-    }
+  React.useEffect(() => {
+    setState((state) => {
+      console.log('reading chat history')
+      let _chat_history = JSON.parse(window.localStorage.getItem('user-chat') ?? '[]')
 
-    setState({
-      ...state,
-      chat_history: [..._chat_history],
+      if (_chat_history.length == 0) {
+        _chat_history = initial_chat_history
+      }
+
+      return {
+        ...state,
+        chat_history: [..._chat_history],
+      }
     })
   }, [])
 
@@ -203,11 +249,12 @@ const Page: NextPage = () => {
 
     // submitMessageAndGenerateResponse(new_message, `${user.given_name.charAt(0)}`, state, setState)
     setState(new_chat_state)
+    setTopics([])
 
     // store the last 100 entries of the chat in localStorage
     window.localStorage.setItem('user-chat', JSON.stringify(new_chat_state.chat_history.slice(0, 100)))
 
-    putNewChatMessage(new_message).then(async (res) => {
+    putNewChatMessage(new_message, model).then(async (res) => {
       // const data: {
       //   chat_id: String
       //   message: String
@@ -263,7 +310,7 @@ const Page: NextPage = () => {
         }
       })
     })
-  }, [message_ref, message, state])
+  }, [message_ref, message, state, model])
 
   const updateMessage = React.useCallback(
     (new_message: String) => {
@@ -395,6 +442,18 @@ const Page: NextPage = () => {
         >
           <div
             style={{
+              height: '2rem',
+              padding: '0.4rem',
+              display: 'flex',
+              gap: '0.2rem',
+            }}
+          >
+            {topics.map((topic, index) => (
+              <Tag key={index}>{topic}</Tag>
+            ))}
+          </div>
+          <div
+            style={{
               display: 'flex',
               gap: '0.2rem',
             }}
@@ -416,7 +475,14 @@ const Page: NextPage = () => {
               type="text"
               inputRef={message_ref}
               onChange={(e) => {
+                clearTimeout(process_message_timeout.current)
+
                 message.current = e.target.value
+
+                process_message_timeout.current = setTimeout(() => {
+                  const _topics = findAscTopicNumber(message.current.toString())
+                  setTopics(_topics)
+                }, 500)
               }}
             />
 
@@ -514,11 +580,12 @@ const Page: NextPage = () => {
               />
             )}
             <Popover2
+              autoFocus
               content={
                 <Menu>
-                  <MenuItem text="gpt-3.5-turbo-16k" />
-                  <MenuItem text="gpt-3.5-turbo" disabled/>
-                  <MenuItem text="gpt-4" disabled/>
+                  <MenuItem text="gpt-3.5-turbo-16k" onClick={() => setModel('gpt-3.5-turbo-16k')} />
+                  <MenuItem text="gpt-3.5-turbo" onClick={() => setModel('gpt-3.5-turbo')} />
+                  <MenuItem text="gpt-4" onClick={() => setModel('gpt-4-0613')} />
                 </Menu>
               }
               minimal
@@ -529,7 +596,7 @@ const Page: NextPage = () => {
                 minimal
                 outlined
                 // disabled
-                text="gpt-3.5-turbo-16k"
+                text={model}
                 icon="predictive-analysis"
                 rightIcon="caret-down"
               />
