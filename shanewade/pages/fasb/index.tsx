@@ -607,9 +607,16 @@ const Page: NextPage = () => {
                 padding: '1rem',
                 paddingTop: '0',
                 width: '100%',
+                display: 'flex',
+                gap: '1rem',
               }}
             >
               <sub>*the last 100 messages are stored locally via cookies.</sub>
+              <sub>
+                <a href="https://platform.openai.com/docs/models/overview" target="_blank">
+                  Learn more about OpenAi models
+                </a>
+              </sub>
               <br />
             </div>
           </div>
