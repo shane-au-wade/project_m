@@ -415,14 +415,14 @@ const Home: NextPage = () => {
               <p>
                 Tested by <a href="https://www.linkedin.com/in/ryanfrederickmuller/">Ryan Müller CA(SA), CPA</a>
               </p>
-              <p>
-                Ryan was able to give the system context of a transaction then
-                <ul style={{margin: '0', paddingLeft: '1rem'}}>
+              <div>
+                <p>Ryan was able to give the system context of a transaction then</p>
+                <ul style={{ margin: '0', paddingLeft: '1rem' }}>
                   <li>generate accounting implications based on relevant asc guidance</li>
                   <li>generate an impairment accounting memo based on the accounting implication conclusion</li>
                   <li>create a draft journal entry for the transaction</li>
                 </ul>
-              </p>
+              </div>
             </summary>
           </Card>
           <Card

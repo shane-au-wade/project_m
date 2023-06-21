@@ -264,7 +264,7 @@ export async function converse(query) {
 
   if (good_query) {
     const completion_playload = {
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-3.5-turbo-16k',
       stream: true,
       messages: [
         {

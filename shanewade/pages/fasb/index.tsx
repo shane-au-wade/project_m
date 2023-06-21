@@ -516,19 +516,20 @@ const Page: NextPage = () => {
             <Popover2
               content={
                 <Menu>
-                  <MenuItem text="gpt-3.5-turbo" />
-                  <MenuItem text="gpt-4" />
+                  <MenuItem text="gpt-3.5-turbo-16k" />
+                  <MenuItem text="gpt-3.5-turbo" disabled/>
+                  <MenuItem text="gpt-4" disabled/>
                 </Menu>
               }
               minimal
               position="bottom-left"
-              disabled
+              // disabled
             >
               <Button
                 minimal
                 outlined
-                disabled
-                text="gpt-3.5-turbo"
+                // disabled
+                text="gpt-3.5-turbo-16k"
                 icon="predictive-analysis"
                 rightIcon="caret-down"
               />
