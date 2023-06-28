@@ -1,5 +1,5 @@
 import { ChromaClient } from 'chromadb'
-import { OPENAI_API_KEY, CHROMADB_URL } from './config'
+import { OPENAI_API_KEY, CHROMADB_URL } from '../config'
 
 import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser'
 

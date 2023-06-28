@@ -12,6 +12,12 @@ FocusStyleManager.onlyShowFocusOnTabs()
 
 import { Card, Collapse, RadioGroup, Radio, Checkbox, Button, Icon, TextArea, Spinner } from '@blueprintjs/core'
 
+import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser'
+
+const DEFAULT_FETCH_OPTIONS: RequestInit = {
+  credentials: 'include',
+}
+
 const useStyles = createUseStyles({
   container: {
     height: '100%',
@@ -49,13 +55,15 @@ type APP_STATE = {
   journal_entry_ref: React.Ref<string>
 }
 
+// ['ASC 605-25-25-2', 'ASC 605-25-25-3', 'ASC 605-25-25-5', 'ASC 605-25-25-6', 'ASC 605-25-30-4'],
+
 const INIT_STATE: APP_STATE = {
   model_state: 'READY',
-  relevant_guidance: ['ASC 605-25-25-2', 'ASC 605-25-25-3', 'ASC 605-25-25-5', 'ASC 605-25-25-6', 'ASC 605-25-30-4'],
+  relevant_guidance: [],
   guidance_approved: false,
   facts_ref: null,
   facts_summary_ref: null,
-  facts_avaliable: false,
+  facts_avaliable: true,
   facts_context_selection: 'USE_INITIAL_FACTS',
   documents: ['FASB_ASC'],
   accounting_implications_ref: null,
@@ -63,12 +71,16 @@ const INIT_STATE: APP_STATE = {
   journal_entry_ref: null,
 }
 
+const init_facts = `- A truck was purchased on September 1 2002, using vehicle financing. The cost price of the truck was $100,000 on September 1, 2002. Trucks are depreciated on a straight line basis over a 36 month period starting on the date of purchase.
+- The fair value of the vehicle financing on September 1, 2002 is comprised of the principle balance of $80,000. The Company elects to expense the interest component of $20,000 on a monthly basis.
+- On October 1, 2003 the Company sold the truck for $110,000. The fair value of the vehicle financing on October 1, 2003 was $75,000. The buyer settled the outstanding balance on the vehicle financing and paid the seller the remaining balance.`
+
 const Page: NextPage = () => {
   const classes = useStyles()
 
   const [state, setState] = React.useState<APP_STATE>(INIT_STATE)
 
-  state.facts_ref = React.useRef<string>('')
+  state.facts_ref = React.useRef<string>(init_facts)
   state.facts_summary_ref = React.useRef<string>('')
   state.accounting_implications_ref = React.useRef<string>('')
   state.technical_memo_ref = React.useRef<string>('')
@@ -142,6 +154,7 @@ const Page: NextPage = () => {
           <h3>Define the facts</h3>
           <TextArea
             fill
+            defaultValue={init_facts}
             style={{ height: '12rem' }}
             onChange={(e) => {
               clearTimeout(facts_timer.current)
@@ -171,23 +184,84 @@ const Page: NextPage = () => {
               large
               icon={<ModelIcon model_state={state.model_state} />}
               intent="primary"
-              text="Generated a summary"
+              text="Generate a summary"
               onClick={() => {
-                setState({
+                const new_state: APP_STATE = {
                   ...state,
                   model_state: 'GENERATING',
-                })
+                }
 
-                setTimeout(() => {
-                  setState({
-                    ...state,
-                    model_state: 'READY',
+                setState(new_state)
+
+                console.log(new_state)
+
+                const payload = {
+                  query: new_state.facts_ref.current,
+                  model: 'gpt-3.5-turbo-16k',
+                }
+
+                console.log('payload', payload)
+
+                fetch('/api/summerize', {
+                  ...DEFAULT_FETCH_OPTIONS,
+                  method: 'POST',
+                  body: JSON.stringify(payload),
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                })
+                  .then(async (res) => {
+                    const data = res.body
+                    if (!data) {
+                      return
+                    }
+
+                    const onParse = (event: ParsedEvent | ReconnectInterval) => {
+                      if (event.type === 'event') {
+                        const data = event.data
+                        try {
+                          const text = JSON.parse(data).text ?? ''
+
+                          new_state.facts_summary_ref.current = new_state.facts_summary_ref.current + text
+
+                          // to render the stream, we would have to trigger a state change
+                          // here, toggling a boolean is probably the simplest trigger
+                        } catch (e) {
+                          console.error(e)
+                        }
+                      }
+                    }
+
+                    // https://web.dev/streams/#the-getreader-and-read-methods
+                    const reader = data.getReader()
+                    const decoder = new TextDecoder()
+                    const parser = createParser(onParse)
+                    let done = false
+                    while (!done) {
+                      const { value, done: doneReading } = await reader.read()
+                      done = doneReading
+                      const chunkValue = decoder.decode(value)
+                      parser.feed(chunkValue)
+                    }
+
+                    setState({
+                      ...new_state,
+                      facts_context_selection: 'USE_SUMMARY',
+                      model_state: 'READY',
+                    })
                   })
-                }, 2000)
+                  .catch((err) => {
+                    console.warn(err)
+                  })
               }}
             />
           </div>
-          <TextArea disabled={!state.facts_avaliable} fill style={{ height: '12rem' }}></TextArea>
+          <TextArea
+            disabled={!state.facts_avaliable}
+            value={state.facts_summary_ref.current}
+            fill
+            style={{ height: '12rem' }}
+          ></TextArea>
           <div>
             {/* context selection radio */}
             <RadioGroup

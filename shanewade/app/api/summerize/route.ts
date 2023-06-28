@@ -1,9 +1,9 @@
-import { converse } from '.'
+import { summerize } from '.'
 
 export async function POST(request: Request) {
   const { query, model } = await request.json()
   try {
-    const message_stream = await converse(query, model ? model : 'gpt-3.5-turbo-16k')
+    const message_stream = await summerize(query, model ? model : 'gpt-3.5-turbo-16k')
 
     return new Response(message_stream, {
       headers: new Headers({
