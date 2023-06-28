@@ -44,6 +44,7 @@ const useStyles = createUseStyles({
 type APP_STATE = {
   model_state: 'GENERATING' | 'READY'
   relevant_guidance: Array<string>
+  relevant_guidance_text: string
   guidance_approved: boolean
   facts_ref: React.Ref<string>
   facts_summary_ref: React.Ref<string>
@@ -60,6 +61,7 @@ type APP_STATE = {
 const INIT_STATE: APP_STATE = {
   model_state: 'READY',
   relevant_guidance: [],
+  relevant_guidance_text: '',
   guidance_approved: false,
   facts_ref: null,
   facts_summary_ref: null,
@@ -134,7 +136,13 @@ const Page: NextPage = () => {
         }}
       >
         <section>
-          <Button text="log state" onClick={() => console.log(state)} />
+          <Button
+            text="log state"
+            onClick={() => {
+              console.log(state)
+              console.log(JSON.stringify(state))
+            }}
+          />
           <p>To abstract a contract or transaction:</p>
           <ol>
             <li>Define the facts</li>
@@ -293,6 +301,7 @@ const Page: NextPage = () => {
           <div>
             <p>Documents</p>
             <Checkbox
+              disabled
               label="FASB ASC"
               value="FASB_ASC"
               defaultChecked={state.documents.includes('FASB_ASC')}
@@ -328,6 +337,53 @@ const Page: NextPage = () => {
               icon={<ModelIcon model_state={state.model_state} />}
               intent="primary"
               text={'Find relevant guidance'}
+              onClick={() => {
+                const new_state: APP_STATE = {
+                  ...state,
+                  model_state: 'GENERATING',
+                }
+
+                setState(new_state)
+
+                console.log(new_state)
+
+                const payload = {
+                  query:
+                    new_state.facts_context_selection == 'USE_INITIAL_FACTS'
+                      ? new_state.facts_ref.current
+                      : new_state.facts_summary_ref.current,
+                  model: 'gpt-3.5-turbo-16k',
+                }
+
+                console.log('payload', payload)
+
+                fetch('/api/guidance', {
+                  ...DEFAULT_FETCH_OPTIONS,
+                  method: 'POST',
+                  body: JSON.stringify(payload),
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                })
+                  .then(async (res) => {
+                    const data = await res.json()
+                    if (!data) {
+                      return
+                    }
+
+                    const { relevant_guidance, relevant_guidance_text } = data
+
+                    setState({
+                      ...new_state,
+                      relevant_guidance: [...relevant_guidance],
+                      relevant_guidance_text: relevant_guidance_text,
+                      model_state: 'READY',
+                    })
+                  })
+                  .catch((err) => {
+                    console.warn(err)
+                  })
+              }}
             />
           </div>
           <div
