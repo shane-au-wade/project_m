@@ -36,35 +36,70 @@ const useStyles = createUseStyles({
 })
 
 type APP_STATE = {
-  facts_context_selection: String
-  relevant_guidance: Array<String>
+  model_state: 'GENERATING' | 'READY'
+  relevant_guidance: Array<string>
   guidance_approved: boolean
   facts_ref: React.Ref<string>
+  facts_summary_ref: React.Ref<string>
   facts_avaliable: boolean
+  facts_context_selection: 'USE_SUMMARY' | 'USE_INITIAL_FACTS'
+  documents: Array<string>
+  accounting_implications_ref: React.Ref<string>
+  technical_memo_ref: React.Ref<string>
+  journal_entry_ref: React.Ref<string>
 }
 
-const INIT_STATE = {
-  facts_context_selection: 'USE_INITIAL_FACTS',
+const INIT_STATE: APP_STATE = {
+  model_state: 'READY',
   relevant_guidance: ['ASC 605-25-25-2', 'ASC 605-25-25-3', 'ASC 605-25-25-5', 'ASC 605-25-25-6', 'ASC 605-25-30-4'],
   guidance_approved: false,
   facts_ref: null,
+  facts_summary_ref: null,
   facts_avaliable: false,
+  facts_context_selection: 'USE_INITIAL_FACTS',
+  documents: ['FASB_ASC'],
+  accounting_implications_ref: null,
+  technical_memo_ref: null,
+  journal_entry_ref: null,
 }
 
 const Page: NextPage = () => {
   const classes = useStyles()
 
-  const [collapseState, setCollapseState] = React.useState({
-    abstraction: true,
-  })
-
   const [state, setState] = React.useState<APP_STATE>(INIT_STATE)
 
   state.facts_ref = React.useRef<string>('')
+  state.facts_summary_ref = React.useRef<string>('')
+  state.accounting_implications_ref = React.useRef<string>('')
+  state.technical_memo_ref = React.useRef<string>('')
+  state.journal_entry_ref = React.useRef<string>('')
+
+  const topic_input_ref = React.useRef<HTMLInputElement>()
 
   const facts_timer = React.useRef()
 
-//   console.log(state)
+  const handleDocumentsChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value
+    const checked = e.currentTarget.checked
+    if (checked) {
+      state.documents.push(e.currentTarget.value)
+      return
+    }
+    const document_index = state.documents.indexOf(value)
+    if (document_index > -1) state.documents.splice(document_index, 1)
+  }
+
+  const ModelIcon = (props: { model_state: 'GENERATING' | 'READY' }) => {
+    const { model_state } = props
+    const ICON_SIZE = 16
+
+    if (model_state == 'GENERATING') {
+      return <Spinner intent="primary" size={ICON_SIZE}></Spinner>
+    }
+    return <Icon size={ICON_SIZE} icon="predictive-analysis" />
+  }
+
+  //   console.log(state)
 
   return (
     <div className={classes.container}>
@@ -87,7 +122,7 @@ const Page: NextPage = () => {
         }}
       >
         <section>
-          {/* <Button text="log state" onClick={() => console.log(state)} /> */}
+          <Button text="log state" onClick={() => console.log(state)} />
           <p>To abstract a contract or transaction:</p>
           <ol>
             <li>Define the facts</li>
@@ -134,9 +169,22 @@ const Page: NextPage = () => {
               disabled={!state.facts_avaliable}
               minimal
               large
-              icon="predictive-analysis"
+              icon={<ModelIcon model_state={state.model_state} />}
               intent="primary"
               text="Generated a summary"
+              onClick={() => {
+                setState({
+                  ...state,
+                  model_state: 'GENERATING',
+                })
+
+                setTimeout(() => {
+                  setState({
+                    ...state,
+                    model_state: 'READY',
+                  })
+                }, 2000)
+              }}
             />
           </div>
           <TextArea disabled={!state.facts_avaliable} fill style={{ height: '12rem' }}></TextArea>
@@ -145,9 +193,10 @@ const Page: NextPage = () => {
             <RadioGroup
               onChange={(e) => {
                 if (!e.currentTarget.value) return state
+                const value = e.currentTarget.value as 'USE_SUMMARY' | 'USE_INITIAL_FACTS'
                 const new_state = {
                   ...state,
-                  facts_context_selection: e.currentTarget.value,
+                  facts_context_selection: value,
                 }
                 setState(new_state)
               }}
@@ -169,14 +218,43 @@ const Page: NextPage = () => {
 
           <div>
             <p>Documents</p>
-            <Checkbox label="FASB ASC" defaultChecked={true} />
-            <Checkbox label="SOX" />
-            <Checkbox label="PCAOB Auditing Standards" />
-            <Checkbox label="Delloite Audit Roadmap" />
+            <Checkbox
+              label="FASB ASC"
+              value="FASB_ASC"
+              defaultChecked={state.documents.includes('FASB_ASC')}
+              onChange={handleDocumentsChange}
+            />
+            <Checkbox
+              disabled
+              label="SOX"
+              value="SOX"
+              defaultChecked={state.documents.includes('SOX')}
+              onChange={handleDocumentsChange}
+            />
+            <Checkbox
+              disabled
+              label="PCAOB Auditing Standards"
+              value="PCAOB"
+              defaultChecked={state.documents.includes('PCAOB')}
+              onChange={handleDocumentsChange}
+            />
+            <Checkbox
+              disabled
+              label="Delloite Audit Roadmap"
+              value="DELLOITE_ROADMAP"
+              defaultChecked={state.documents.includes('DELLOITE_ROADMAP')}
+              onChange={handleDocumentsChange}
+            />
           </div>
 
           <div>
-            <Button minimal large icon="predictive-analysis" intent="primary" text={'Find relevant guidance'} />
+            <Button
+              minimal
+              large
+              icon={<ModelIcon model_state={state.model_state} />}
+              intent="primary"
+              text={'Find relevant guidance'}
+            />
           </div>
           <div
             style={{
@@ -191,7 +269,9 @@ const Page: NextPage = () => {
             {state.relevant_guidance.map((topic_id, index) => (
               <Tag
                 key={index}
-                large
+                style={{
+                  fontSize: '0.9rem',
+                }}
                 rightIcon={
                   <Button
                     icon={
@@ -221,17 +301,33 @@ const Page: NextPage = () => {
           </div>
           <div
             style={{
-              width: '25rem',
+              maxWidth: '25rem',
             }}
           >
-            <sub
-              style={{
-                paddingBottom: '1rem',
-              }}
-            >
-              Add Topic
-            </sub>
-            <InputGroup type="text" rightElement={<Button text="Add" icon="add" />}></InputGroup>
+            <sub style={{ paddingBottom: '1rem' }}>Add Topic</sub>
+            <InputGroup
+              large
+              type="text"
+              inputRef={topic_input_ref}
+              rightElement={
+                <Button
+                  text="Add"
+                  icon="add"
+                  onClick={() => {
+                    if (!topic_input_ref.current) return
+                    const topic = topic_input_ref.current.value
+                    // clear input value
+                    topic_input_ref.current.value = ''
+                    const new_relevant_guidance = [...state.relevant_guidance]
+                    new_relevant_guidance.push(topic)
+                    setState({
+                      ...state,
+                      relevant_guidance: new_relevant_guidance,
+                    })
+                  }}
+                />
+              }
+            />
           </div>
 
           <div>
@@ -262,7 +358,7 @@ const Page: NextPage = () => {
               minimal
               large
               intent="primary"
-              icon="predictive-analysis"
+              icon={<ModelIcon model_state={state.model_state} />}
               text="Generate accounting implications"
             />
             <TextArea disabled={!state.guidance_approved} fill style={{ height: '12rem' }}></TextArea>
@@ -274,7 +370,7 @@ const Page: NextPage = () => {
               minimal
               large
               intent="primary"
-              icon="predictive-analysis"
+              icon={<ModelIcon model_state={state.model_state} />}
               text="Draft a technical memo"
             />
             <TextArea disabled={!state.guidance_approved} fill style={{ height: '12rem' }}></TextArea>
@@ -286,7 +382,7 @@ const Page: NextPage = () => {
               minimal
               large
               intent="primary"
-              icon="predictive-analysis"
+              icon={<ModelIcon model_state={state.model_state} />}
               text="Draft a journal entry"
             />
             <TextArea disabled={!state.guidance_approved} fill style={{ height: '12rem' }}></TextArea>
