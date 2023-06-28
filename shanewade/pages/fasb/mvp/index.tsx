@@ -39,12 +39,16 @@ type APP_STATE = {
   facts_context_selection: String
   relevant_guidance: Array<String>
   guidance_approved: boolean
+  facts_ref: React.Ref<string>
+  facts_avaliable: boolean
 }
 
 const INIT_STATE = {
-  facts_context_selection: '',
+  facts_context_selection: 'USE_INITIAL_FACTS',
   relevant_guidance: ['ASC 605-25-25-2', 'ASC 605-25-25-3', 'ASC 605-25-25-5', 'ASC 605-25-25-6', 'ASC 605-25-30-4'],
   guidance_approved: false,
+  facts_ref: null,
+  facts_avaliable: false,
 }
 
 const Page: NextPage = () => {
@@ -55,6 +59,12 @@ const Page: NextPage = () => {
   })
 
   const [state, setState] = React.useState<APP_STATE>(INIT_STATE)
+
+  state.facts_ref = React.useRef<string>('')
+
+  const facts_timer = React.useRef()
+
+//   console.log(state)
 
   return (
     <div className={classes.container}>
@@ -77,6 +87,7 @@ const Page: NextPage = () => {
         }}
       >
         <section>
+          {/* <Button text="log state" onClick={() => console.log(state)} /> */}
           <p>To abstract a contract or transaction:</p>
           <ol>
             <li>Define the facts</li>
@@ -94,11 +105,41 @@ const Page: NextPage = () => {
           }}
         >
           <h3>Define the facts</h3>
-          <TextArea fill style={{ height: '12rem' }}></TextArea>
+          <TextArea
+            fill
+            style={{ height: '12rem' }}
+            onChange={(e) => {
+              clearTimeout(facts_timer.current)
+
+              state.facts_ref.current = e.currentTarget.value
+
+              facts_timer.current = setTimeout(() => {
+                if (state.facts_ref.current.length > 10) {
+                  setState({
+                    ...state,
+                    facts_avaliable: true,
+                  })
+                  return
+                }
+
+                setState({
+                  ...state,
+                  facts_avaliable: false,
+                })
+              }, 500)
+            }}
+          />
           <div>
-            <Button minimal large icon="predictive-analysis" intent="primary" text="Generated a summary" />
+            <Button
+              disabled={!state.facts_avaliable}
+              minimal
+              large
+              icon="predictive-analysis"
+              intent="primary"
+              text="Generated a summary"
+            />
           </div>
-          <TextArea fill style={{ height: '12rem' }}></TextArea>
+          <TextArea disabled={!state.facts_avaliable} fill style={{ height: '12rem' }}></TextArea>
           <div>
             {/* context selection radio */}
             <RadioGroup
@@ -149,7 +190,7 @@ const Page: NextPage = () => {
           >
             {state.relevant_guidance.map((topic_id, index) => (
               <Tag
-              key={index}
+                key={index}
                 large
                 rightIcon={
                   <Button
@@ -216,17 +257,38 @@ const Page: NextPage = () => {
         <section style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <h3>Generate Content</h3>
           <div>
-            <Button disabled={!state.guidance_approved} minimal large intent="primary" icon="predictive-analysis" text="Generate accounting implications" />
-            <TextArea  disabled={!state.guidance_approved} fill style={{ height: '12rem' }}></TextArea>
-          </div>
-
-          <div>
-            <Button disabled={!state.guidance_approved} minimal large intent="primary" icon="predictive-analysis" text="Draft a technical memo" />
+            <Button
+              disabled={!state.guidance_approved}
+              minimal
+              large
+              intent="primary"
+              icon="predictive-analysis"
+              text="Generate accounting implications"
+            />
             <TextArea disabled={!state.guidance_approved} fill style={{ height: '12rem' }}></TextArea>
           </div>
 
           <div>
-            <Button disabled={!state.guidance_approved} minimal large intent="primary" icon="predictive-analysis" text="Draft a journal entry" />
+            <Button
+              disabled={!state.guidance_approved}
+              minimal
+              large
+              intent="primary"
+              icon="predictive-analysis"
+              text="Draft a technical memo"
+            />
+            <TextArea disabled={!state.guidance_approved} fill style={{ height: '12rem' }}></TextArea>
+          </div>
+
+          <div>
+            <Button
+              disabled={!state.guidance_approved}
+              minimal
+              large
+              intent="primary"
+              icon="predictive-analysis"
+              text="Draft a journal entry"
+            />
             <TextArea disabled={!state.guidance_approved} fill style={{ height: '12rem' }}></TextArea>
             <sub>Connect your ERP software to enable automatic updates</sub>
             <br />
