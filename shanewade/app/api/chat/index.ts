@@ -2,14 +2,15 @@ import { OPENAI_API_KEY } from '../config'
 
 import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser'
 
-function getChatSystemPrompt() {
+function getChatSystemPrompt(guidance_text: string) {
   return `
-You are an expert financial accounting AI
-You help people summerize the facts of a financial transaction
-Reiterate all of the facts present in the given transaction
+relevant guidance
+---
+${guidance_text}
+---
 
-Use bullet points
-`
+You are an expert financial accounting AI
+You will answer the user's query using ONLY the provided relevant guidance`
 }
 
 type Models =
@@ -20,12 +21,21 @@ type Models =
   | 'gpt-4-0613'
   | 'gpt-4'
 
-export async function summerize(query: string, model: Models) {
-  console.log('INFO: generating summery, please wait...')
+export async function chat(
+  thread: Array<{
+    role: 'assistant' | 'user'
+    content: string
+  }>,
+  relevant_guidance_text: string,
+  model: Models
+) {
+  console.log('INFO: chatting, please wait...')
 
   console.log('INFO: using model ', model)
 
-  const chat_system = getChatSystemPrompt()
+  const chat_system = getChatSystemPrompt(relevant_guidance_text)
+
+  console.log('INFO: chat system prompt', chat_system)
 
   const completion_playload = {
     model: model,
@@ -35,17 +45,12 @@ export async function summerize(query: string, model: Models) {
         role: 'system',
         content: chat_system,
       },
-
-      {
-        role: 'user',
-        content: query,
-      },
+      ...thread.slice(-5),
     ],
   }
 
   return OpenAIChatCompletionStream(completion_playload, [])
 }
-
 
 export type ChatGPTAgent = 'user' | 'system'
 

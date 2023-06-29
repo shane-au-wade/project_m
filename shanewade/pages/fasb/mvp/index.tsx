@@ -490,8 +490,94 @@ const Page: NextPage = () => {
               intent="primary"
               icon={<ModelIcon model_state={state.model_state} />}
               text="Generate accounting implications"
+              onClick={() => {
+                const new_state: APP_STATE = {
+                  ...state,
+                  model_state: 'GENERATING',
+                }
+
+                setState(new_state)
+
+                console.log(new_state)
+
+                const thread = [
+                  {
+                    role: 'user',
+                    content: `TRANSACTION
+---
+${
+  new_state.facts_context_selection == 'USE_INITIAL_FACTS'
+    ? new_state.facts_ref.current
+    : new_state.facts_summary_ref.current
+}
+---
+
+What are the accounting implications for the transaction?`,
+                  },
+                ]
+
+                const payload = {
+                  thread: thread,
+                  relevant_guidance_text: new_state.relevant_guidance_text,
+                  model: 'gpt-3.5-turbo-16k',
+                }
+
+                console.log('payload', payload)
+
+                fetch('/api/chat', {
+                  ...DEFAULT_FETCH_OPTIONS,
+                  method: 'POST',
+                  body: JSON.stringify(payload),
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                })
+                  .then(async (res) => {
+                    const data = res.body
+                    if (!data) {
+                      return
+                    }
+
+                    const onParse = (event: ParsedEvent | ReconnectInterval) => {
+                      if (event.type === 'event') {
+                        const data = event.data
+                        try {
+                          const text = JSON.parse(data).text ?? ''
+
+                          new_state.accounting_implications_ref.current =
+                            new_state.accounting_implications_ref.current + text
+
+                          // to render the stream, we would have to trigger a state change
+                          // here, toggling a boolean is probably the simplest trigger
+                        } catch (e) {
+                          console.error(e)
+                        }
+                      }
+                    }
+
+                    // https://web.dev/streams/#the-getreader-and-read-methods
+                    const reader = data.getReader()
+                    const decoder = new TextDecoder()
+                    const parser = createParser(onParse)
+                    let done = false
+                    while (!done) {
+                      const { value, done: doneReading } = await reader.read()
+                      done = doneReading
+                      const chunkValue = decoder.decode(value)
+                      parser.feed(chunkValue)
+                    }
+
+                    setState({
+                      ...new_state,
+                      model_state: 'READY',
+                    })
+                  })
+                  .catch((err) => {
+                    console.warn(err)
+                  })
+              }}
             />
-            <TextArea disabled={!state.guidance_approved} fill style={{ height: '12rem' }}></TextArea>
+            <TextArea disabled={!state.guidance_approved} value={state.accounting_implications_ref.current} fill style={{ height: '12rem' }}></TextArea>
           </div>
 
           <div>
