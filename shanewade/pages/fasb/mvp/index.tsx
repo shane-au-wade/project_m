@@ -54,6 +54,7 @@ type APP_STATE = {
   accounting_implications_ref: React.Ref<string>
   technical_memo_ref: React.Ref<string>
   journal_entry_ref: React.Ref<string>
+  hot_reload: boolean
 }
 
 // ['ASC 605-25-25-2', 'ASC 605-25-25-3', 'ASC 605-25-25-5', 'ASC 605-25-25-6', 'ASC 605-25-30-4'],
@@ -71,9 +72,10 @@ const INIT_STATE: APP_STATE = {
   accounting_implications_ref: null,
   technical_memo_ref: null,
   journal_entry_ref: null,
+  hot_reload: false,
 }
 
-const init_facts = `- A truck was purchased on September 1 2002, using vehicle financing. The cost price of the truck was $100,000 on September 1, 2002. Trucks are depreciated on a straight line basis over a 36 month period starting on the date of purchase.
+const example_facts = `- A truck was purchased on September 1 2002, using vehicle financing. The cost price of the truck was $100,000 on September 1, 2002. Trucks are depreciated on a straight line basis over a 36 month period starting on the date of purchase.
 - The fair value of the vehicle financing on September 1, 2002 is comprised of the principle balance of $80,000. The Company elects to expense the interest component of $20,000 on a monthly basis.
 - On October 1, 2003 the Company sold the truck for $110,000. The fair value of the vehicle financing on October 1, 2003 was $75,000. The buyer settled the outstanding balance on the vehicle financing and paid the seller the remaining balance.`
 
@@ -82,7 +84,7 @@ const Page: NextPage = () => {
 
   const [state, setState] = React.useState<APP_STATE>(INIT_STATE)
 
-  state.facts_ref = React.useRef<string>(init_facts)
+  state.facts_ref = React.useRef<string>('')
   state.facts_summary_ref = React.useRef<string>('')
   state.accounting_implications_ref = React.useRef<string>('')
   state.technical_memo_ref = React.useRef<string>('')
@@ -122,7 +124,16 @@ const Page: NextPage = () => {
           fontSize: '1rem',
         }}
       >
-        <span className="rgb_color">{`{`}</span> <span>neokeeper</span> <span className="rgb_color">{`}`}</span>
+        <span className="rgb_color">{`{`}</span>{' '}
+        <span
+          onClick={() => {
+            console.log(state)
+            // console.log(JSON.stringify(state))
+          }}
+        >
+          neokeeper
+        </span>{' '}
+        <span className="rgb_color">{`}`}</span>
       </h1>
       <h2>
         <span>Abstract a Transaction</span>
@@ -136,13 +147,6 @@ const Page: NextPage = () => {
         }}
       >
         <section>
-          <Button
-            text="log state"
-            onClick={() => {
-              console.log(state)
-              console.log(JSON.stringify(state))
-            }}
-          />
           <p>To abstract a contract or transaction:</p>
           <ol>
             <li>Define the facts</li>
@@ -150,6 +154,8 @@ const Page: NextPage = () => {
             <li>Generate the appropriate content</li>
           </ol>
         </section>
+        <hr style={{ width: '95%', color: 'burlywood', border: '1px dashed' }} />
+        <br />
 
         {/* Define the facts section */}
         <section
@@ -159,10 +165,27 @@ const Page: NextPage = () => {
             gap: '1rem',
           }}
         >
-          <h3>Define the facts</h3>
+          <h3>
+            <span className="rgb_color">1. </span>Define the facts
+          </h3>
+          <p>Define the facts of the financial transaction.</p>
+          <div>
+            <Button
+              minimal
+              intent={'warning'}
+              text="Copy example to clipboard"
+              icon={'clipboard'}
+              onClick={() => {
+                navigator.clipboard.writeText(String(example_facts)).then(() => {
+                  console.log('copied example facts to clipboard')
+                })
+              }}
+            />
+          </div>
+
           <TextArea
             fill
-            defaultValue={init_facts}
+            defaultValue={state.facts_ref.current}
             style={{ height: '12rem' }}
             onChange={(e) => {
               clearTimeout(facts_timer.current)
@@ -263,6 +286,8 @@ const Page: NextPage = () => {
                   })
               }}
             />
+            <br />
+            <p>Generate a concise summary of the provided facts.</p>
           </div>
           <TextArea
             disabled={!state.facts_avaliable}
@@ -271,6 +296,7 @@ const Page: NextPage = () => {
             style={{ height: '12rem' }}
           ></TextArea>
           <div>
+            <p>Select which facts to use for the next steps</p>
             {/* context selection radio */}
             <RadioGroup
               onChange={(e) => {
@@ -296,10 +322,14 @@ const Page: NextPage = () => {
 
         {/* relevant guidance section */}
         <section style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <h3>Find and approve relevant guidance</h3>
+          <h3>
+            <span className="rgb_color">2. </span>Find and approve relevant guidance
+          </h3>
+          <p>Given the facts of the transaction, find relevant accounting guidance.</p>
 
           <div>
-            <p>Documents</p>
+            <h4 style={{ margin: '0' }}>Documents</h4>
+            <p>Select which guidance documents should be search and then run the AI Search.</p>
             <Checkbox
               disabled
               label="FASB ASC"
@@ -323,9 +353,9 @@ const Page: NextPage = () => {
             />
             <Checkbox
               disabled
-              label="Delloite Audit Roadmap"
-              value="DELLOITE_ROADMAP"
-              defaultChecked={state.documents.includes('DELLOITE_ROADMAP')}
+              label="Deloitte Audit Roadmap"
+              value="DELOITTE_ROADMAP"
+              defaultChecked={state.documents.includes('DELOITTE_ROADMAP')}
               onChange={handleDocumentsChange}
             />
           </div>
@@ -434,7 +464,7 @@ const Page: NextPage = () => {
               maxWidth: '25rem',
             }}
           >
-            <sub style={{ paddingBottom: '1rem' }}>Add Topic</sub>
+            <p style={{ paddingBottom: '0.2rem', margin: 0 }}>Manually add topics as necessary.</p>
             <InputGroup
               large
               type="text"
@@ -472,6 +502,7 @@ const Page: NextPage = () => {
               }}
               checked={state.guidance_approved}
             />
+            <p>*Your approved guidance will be used in the next step.</p>
           </div>
         </section>
 
@@ -481,8 +512,11 @@ const Page: NextPage = () => {
 
         {/* Generate content */}
         <section style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <h3>Generate Content</h3>
+          <h3>
+            <span className="rgb_color">3. </span>Generate Content
+          </h3>
           <div>
+            <p>Given the facts of the transaction and the relevant guidance:</p>
             <Button
               disabled={!state.guidance_approved}
               minimal
@@ -577,7 +611,12 @@ What are the accounting implications for the transaction?`,
                   })
               }}
             />
-            <TextArea disabled={!state.guidance_approved} value={state.accounting_implications_ref.current} fill style={{ height: '12rem' }}></TextArea>
+            <TextArea
+              disabled={!state.guidance_approved}
+              value={state.accounting_implications_ref.current}
+              fill
+              style={{ height: '12rem' }}
+            ></TextArea>
           </div>
 
           <div>
