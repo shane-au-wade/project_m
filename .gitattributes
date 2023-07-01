@@ -101,3 +101,9 @@ knowledge/fasb/documents/830_foreign_currency_matters.json filter=lfs diff=lfs m
 knowledge/fasb/documents/860_transfers_and_servicing.json filter=lfs diff=lfs merge=lfs -text
 knowledge/fasb/documents/995_u.s._steamship_entities.json filter=lfs diff=lfs merge=lfs -text
 knowledge/fasb/documents/230_statement_of_cash_flows.json filter=lfs diff=lfs merge=lfs -text
+knowledge/pcaob/**.*.json filter=lfs diff=lfs merge=lfs -text
+knowledge/pcaob/embeddings/embedding_cache_0.json filter=lfs diff=lfs merge=lfs -text
+knowledge/pcaob/embeddings/embedding_cache.json filter=lfs diff=lfs merge=lfs -text
+knowledge/pcaob/documents/auditing_interpretations_audits_after_december_15_2020.pdf filter=lfs diff=lfs merge=lfs -text
+knowledge/pcaob/documents/auditing_interpretations_audits_before_december_15_2020.pdf filter=lfs diff=lfs merge=lfs -text
+knowledge/pcaob/documents/auditing_standards_audits_after_december_15_2020.pdf filter=lfs diff=lfs merge=lfs -text
