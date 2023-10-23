@@ -1,5 +1,5 @@
 section {
-    outline: 2px solid black;
+    /* outline: 2px solid black; */
     width: 100%;
     /* min-width: 100rem; */
     /* width: 50rem; */
@@ -25,10 +25,4 @@ section {
 
 .benifit > p {
     font-size: 1rem;
-}
-
-.business_logos {
-    grid-template-columns: repeat(3,150px);  /* 3 columns */
-    grid-template-rows: repeat(3,150px); /* 3 rows  */
-    grid-gap:50px 30px; /* 50 */
 }

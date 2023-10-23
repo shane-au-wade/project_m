@@ -1,4 +1,5 @@
 import type { NextPage } from 'next'
+import Image from 'next/image'
 import * as React from 'react'
 
 import { createUseStyles } from 'react-jss'
@@ -111,44 +112,52 @@ const Page: NextPage = () => {
 
       {/* <section id="hero"></section> */}
 
-      <section id="problem_solution" style={{ display: 'flex', backgroundColor: PRIMARY }}>
-        <div style={{ display: 'grid', width: '50%' }}>
-          <iframe
-            style={{ alignSelf: 'center', margin: '0 auto' }}
-            data-ux="Embed"
-            height={270}
-            width={350}
-            allowFullScreen
-            frameBorder="0"
-            src="//player.vimeo.com/video/835227969?h=ede8b80c29&amp;autoplay=0&amp;title=0&amp;portrait=0&amp;byline=0&amp;badge=0"
-            data-aid="VIDEO_VIDEO_RENDERED0"
-            // class=""
-          ></iframe>
-        </div>
+      <section id="problem_solution" style={{ backgroundColor: PRIMARY }}>
+        <div
+          style={{
+            display: 'flex',
+            maxWidth: '70rem',
+            margin: '0 auto'
+          }}
+        >
+          <div style={{ display: 'grid', width: '50%' }}>
+            <iframe
+              style={{ alignSelf: 'center', margin: '0 auto' }}
+              data-ux="Embed"
+              height={270}
+              width={350}
+              allowFullScreen
+              frameBorder="0"
+              src="//player.vimeo.com/video/835227969?h=ede8b80c29&amp;autoplay=0&amp;title=0&amp;portrait=0&amp;byline=0&amp;badge=0"
+              data-aid="VIDEO_VIDEO_RENDERED0"
+              // class=""
+            ></iframe>
+          </div>
 
-        <div style={{ width: '50%', paddingTop: '3rem', paddingBottom: '3rem' }}>
-          <p style={{ fontSize: '20px' }}>
-            <strong>Single UAV photography trades speed for resolution.</strong> Drone operators need to understand what
-            their client wants to accomplish with the photos, and then dial in flight settings that balance flight time,
-            and photo quality. The result is usually the lowest quality for the fastest time, based on the drone
-            operators estimate.
-          </p>
-          <br />
+          <div style={{ width: '50%', paddingTop: '3rem', paddingBottom: '3rem' }}>
+            <p style={{ fontSize: '20px' }}>
+              <strong>Single UAV photography trades speed for resolution.</strong> Drone operators need to understand
+              what their client wants to accomplish with the photos, and then dial in flight settings that balance
+              flight time, and photo quality. The result is usually the lowest quality for the fastest time, based on
+              the drone operators estimate.
+            </p>
+            <br />
 
-          <p style={{ fontSize: '18px' }}>
-            <strong>The photos didn{"'"}t have the detail you needed.</strong> You needed photos of your field before an
-            upcoming hail storm. You got the quote that fit your budget and time-frame but when you gave the photos to
-            the insurance company, they couldn{"'"}t use them to adjust your claim.
-          </p>
-          <br />
-          <p style={{ fontSize: '16px' }}>
-            <strong>Never trade quality for speed again.</strong> Our drone control software enables multi-UAV
-            photography. You will get the detail you need when you need it.
-          </p>
+            <p style={{ fontSize: '18px' }}>
+              <strong>The photos didn{"'"}t have the detail you needed.</strong> You needed photos of your field before
+              an upcoming hail storm. You got the quote that fit your budget and time-frame but when you gave the photos
+              to the insurance company, they couldn{"'"}t use them to adjust your claim.
+            </p>
+            <br />
+            <p style={{ fontSize: '16px' }}>
+              <strong>Never trade quality for speed again.</strong> Our drone control software enables multi-UAV
+              photography. You will get the detail you need when you need it.
+            </p>
+          </div>
         </div>
       </section>
 
-      <section id="benefits">
+      <section id="benefits" style={{paddingBottom: '1rem'}}>
         <h2
           style={{
             textAlign: 'center',
@@ -159,7 +168,7 @@ const Page: NextPage = () => {
         >
           The Threshold Advantage
         </h2>
-        <div id="three_benifits" style={{ display: 'flex', gap: '1rem' }}>
+        <div id="three_benifits" style={{ display: 'flex', gap: '1rem', maxWidth: '55rem', margin: '0 auto' }}>
           <div className="benifit">
             <Icon icon="repeat" size={45} />
             <br />
@@ -191,6 +200,7 @@ const Page: NextPage = () => {
         id="social_proof"
         style={{
           backgroundColor: ACCENT,
+          paddingBottom: '3rem',
         }}
       >
         <h2
@@ -206,21 +216,37 @@ const Page: NextPage = () => {
         <p
           style={{
             textAlign: 'center',
-            fontSize: '1.3rem',
+            fontSize: '1.5rem',
             color: SECONDARY,
             // padding: '2rem',
           }}
         >
           <strong>Industry leaders trust us to deliver the data they need, when they need it</strong>
         </p>
-        <div className='business_logos' style={{
-            display: 'grid'
-        }}>
-            
-
+        <br />
+        <br />
+        <div
+          className="business_logos"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2rem',
+            margin: '0 auto',
+            width: 'fit-content',
+          }}
+        >
+          <div style={{ display: 'flex', gap: '3rem' }}>
+            <Image src="/threshold/decisive-farming.webp" alt="decisive farming logo" width={225} height={75} />
+            <Image src="/threshold/Thrive-SV-Ventures.png" alt="thrive svg logo" width={255} height={75} />
+            <Image src="/threshold/olds_header-logo.png" alt="alberta innovates logo" width={300} height={75} />
+          </div>
+          <div style={{ display: 'flex', gap: '3rem' }}>
+            <Image src="/threshold/alberta_innovates.svg" alt="thrive svg" width={255} height={75} />
+            <Image src="/threshold/nrc-irap.png" alt="thrive svg" width={255} height={75} />
+            <Image src="/threshold/ABCatalyzer.png" alt="thrive svg" width={255} height={75} />
+          </div>
         </div>
       </section>
-
 
       <section id="by_the_numbers"></section>
     </div>
