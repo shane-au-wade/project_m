@@ -14,7 +14,7 @@ function DeemLogo(props: { style?: any }) {
   return (
     <h1
       style={{
-        fontSize: '3.5rem',
+        fontSize: '2.75rem',
         fontFamily: 'garamond, serif',
         ...props.style,
       }}
@@ -60,15 +60,13 @@ export default function Home() {
         className={styles.main}
         style={{
           borderBottom: '1px black dotted',
-          gap: '7rem'
+          gap: '7rem',
         }}
       >
         <nav
           ref={nav_ref}
           style={{
             width: '100%',
-            display: 'flex',
-            padding: '1rem',
             borderBottom: '1px black dotted',
             position: 'sticky',
             top: '0px',
@@ -76,20 +74,29 @@ export default function Home() {
             transition: 'background 0.25s ease-in',
           }}
         >
-          <DeemLogo style={{ color: '#FC8C79' }} />
-          <div style={{ flexGrow: 1 }} />
-          <Button
-            large
-            minimal
-            outlined
-            text="Join"
+          <div
             style={{
-              fontWeight: 'bold',
-              margin: '1rem',
+              display: 'flex',
+              padding: '1rem',
+              maxWidth: '70rem',
+              margin: '0 auto',
             }}
-          ></Button>
+          >
+            <DeemLogo style={{ color: '#FC8C79' }} />
+            <div style={{ flexGrow: 1 }} />
+            <Button
+              large
+              minimal
+              outlined
+              text="Join"
+              style={{
+                fontWeight: 'bold',
+                margin: '0.5rem',
+              }}
+            ></Button>
+          </div>
         </nav>
-        
+
         <section
           id="tagline"
           style={{
@@ -178,8 +185,17 @@ export default function Home() {
             }}
           />
         </section>
+        {/* empty div to allow flex gap to space out the bottom */}
+        <div />
+        <div />
       </main>
-      <footer className={styles.footer}>
+      <footer
+        className={styles.footer}
+        style={{
+          maxWidth: '70rem',
+          margin: '0 auto',
+        }}
+      >
         <div
           style={{
             display: 'flex',

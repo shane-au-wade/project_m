@@ -5,10 +5,10 @@ const { OPENAI_API_KEY } = require('./config')
 
 const { ChromaClient } = require('chromadb')
 
-// const client = new ChromaClient()
-const client = new ChromaClient({
-  path: 'http://ec2-35-161-235-3.us-west-2.compute.amazonaws.com:8000',
-})
+const client = new ChromaClient()
+// const client = new ChromaClient({
+//   path: 'http://ec2-35-161-235-3.us-west-2.compute.amazonaws.com:8000',
+// })
 
 const { Configuration, OpenAIApi } = require('openai')
 const configuration = new Configuration({
