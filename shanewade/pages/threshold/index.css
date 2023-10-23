@@ -1,0 +1,34 @@
+section {
+    outline: 2px solid black;
+    width: 100%;
+    /* min-width: 100rem; */
+    /* width: 50rem; */
+    /* min-width: 80rem; */
+    /* max-width: 100rem; */
+    /* margin: 0 auto; */
+}
+
+#hero {
+    background: url("/threshold/bg.webp");
+}
+
+.benifit {
+    text-align: center; 
+    max-width: 33.33%; 
+    flex-grow: 1; 
+    padding: 1rem;
+}
+
+.benifit > h3 {
+    font-size: 1.7rem;
+}
+
+.benifit > p {
+    font-size: 1rem;
+}
+
+.business_logos {
+    grid-template-columns: repeat(3,150px);  /* 3 columns */
+    grid-template-rows: repeat(3,150px); /* 3 rows  */
+    grid-gap:50px 30px; /* 50 */
+}
