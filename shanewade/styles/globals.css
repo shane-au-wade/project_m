@@ -108,3 +108,9 @@ h1, h2, h3 {
   90% { color: rgb(245, 105, 194);  }
   100% { color: rgb(235, 42, 42); }
 }
+
+
+.grid_background {
+  background-image: radial-gradient(circle at 1px 1px, floralWhite 1px, transparent 0);
+  background-size: 40px 40px;
+}

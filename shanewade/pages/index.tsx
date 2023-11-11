@@ -351,7 +351,6 @@ const Home: NextPage = () => {
           </a>
         </div>
       </div>
-
       {/* page content container  */}
       <div style={{ padding: '0rem', maxWidth: '80rem', margin: 'auto' }}>
         <h2 style={{ marginTop: '0' }}>Current Projects</h2>
