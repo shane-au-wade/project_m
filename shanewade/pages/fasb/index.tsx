@@ -295,7 +295,12 @@ const Page: NextPage = () => {
       const parser = createParser(onParse)
       let done = false
       while (!done) {
-        const { value, done: doneReading } = await reader.read()
+        const read_data = await reader.read()
+
+        const { value, done: doneReading } = read_data
+
+        // console.log(read_data)
+
         done = doneReading
         const chunkValue = decoder.decode(value)
         parser.feed(chunkValue)

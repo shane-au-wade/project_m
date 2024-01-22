@@ -183,7 +183,7 @@ export async function converse(query, model: Models) {
     method: 'POST',
     body: JSON.stringify({
       model: 'gpt-3.5-turbo-instruct',
-      prompt:vseo_prompt,
+      prompt: vseo_prompt,
       temperature: 0.9,
       max_tokens: 512,
       top_p: 1,
@@ -406,7 +406,7 @@ export async function OpenAIChatCompletionStream(payload: OpenAIStreamPayload, m
     async transform(chunk, controller) {
       const data = decoder.decode(chunk)
       // https://beta.openai.com/docs/api-reference/completions/create#completions/create-stream
-      if (data === '[DONE]') {
+      if (data == '[DONE]') {
         // stream additional string meta data
 
         for await (const entry of meta_data as string) {
@@ -419,13 +419,6 @@ export async function OpenAIChatCompletionStream(payload: OpenAIStreamPayload, m
           )
         }
 
-        controller.enqueue(encoder.encode('[*DONE]'))
-
-        // controller.terminate()
-        // return
-      }
-
-      if (data === '[*DONE]') {
         controller.terminate()
         return
       }
