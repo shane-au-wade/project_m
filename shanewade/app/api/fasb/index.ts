@@ -182,13 +182,14 @@ export async function converse(query, model: Models) {
     },
     method: 'POST',
     body: JSON.stringify({
-      model: 'text-davinci-003',
-      prompt: vseo_prompt,
-      temperature: 1,
+      model: 'gpt-3.5-turbo-instruct',
+      prompt:vseo_prompt,
+      temperature: 0.9,
       max_tokens: 512,
       top_p: 1,
-      frequency_penalty: 2,
-      presence_penalty: 0,
+      frequency_penalty: 0.1,
+      presence_penalty: 0.6,
+      stop: [' Human:', ' AI:'],
     }),
   })
   const vseo_json = await vseo_response.json()
