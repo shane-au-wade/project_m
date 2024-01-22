@@ -1,6 +1,6 @@
 import { converse } from '.'
 
-export const runtime = 'edge'
+export const maxDuration = 120 // This function can run for a maximum of 60 seconds
 
 export async function POST(request: Request) {
   const { query, model } = await request.json()
