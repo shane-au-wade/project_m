@@ -16,7 +16,7 @@
     "heatmapjs": "^2.0.2",
     "leaflet": "^1.7.1",
     "leaflet-heatmap": "^1.0.0",
-    "next": "^13.3.4",
+    "next": "13.5",
     "openai": "^3.2.1",
     "papaparse": "^5.3.1",
     "react": "^18.2.0",
