@@ -585,7 +585,7 @@ const Page: NextPage = () => {
                 <Menu>
                   <MenuItem text="gpt-3.5-turbo-16k" onClick={() => setModel('gpt-3.5-turbo-16k')} />
                   <MenuItem text="gpt-3.5-turbo" onClick={() => setModel('gpt-3.5-turbo')} />
-                  <MenuItem text="gpt-4" onClick={() => setModel('gpt-4-0613')} />
+                  <MenuItem text="gpt-4" onClick={() => setModel('gpt-4')} />
                 </Menu>
               }
               minimal

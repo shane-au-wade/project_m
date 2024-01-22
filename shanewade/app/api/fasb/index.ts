@@ -302,6 +302,11 @@ export async function converse(query, model: Models) {
     const completion_playload = {
       model: model,
       stream: true,
+      max_tokens: 10240,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+      temperature: 1,
       messages: [
         {
           role: 'system',
