@@ -1,5 +1,7 @@
 import { converse } from '.'
 
+export const runtime = 'edge'
+
 export async function POST(request: Request) {
   const { query, model } = await request.json()
   try {
