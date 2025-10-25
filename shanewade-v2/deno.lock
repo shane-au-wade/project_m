@@ -10,11 +10,13 @@
     "npm:@types/react-dom@^19.2.2": "19.2.2_@types+react@19.2.2",
     "npm:@types/react@^19.2.2": "19.2.2",
     "npm:astro@5.14.8": "5.14.8_vite@6.4.1__picomatch@4.0.3_zod@3.25.76_@types+node@24.2.0",
+    "npm:astro@5.15.1": "5.15.1_@types+node@24.2.0_vite@6.4.1__@types+node@24.2.0__picomatch@4.0.3_zod@3.25.76",
     "npm:astro@^5.14.8": "5.14.8_vite@6.4.1__picomatch@4.0.3_zod@3.25.76_@types+node@24.2.0",
     "npm:astro@^5.15.1": "5.15.1_@types+node@24.2.0_vite@6.4.1__@types+node@24.2.0__picomatch@4.0.3_zod@3.25.76",
     "npm:astro@latest": "5.14.8_vite@6.4.1__picomatch@4.0.3_zod@3.25.76_@types+node@24.2.0",
     "npm:react-dom@^19.2.0": "19.2.0_react@19.2.0",
-    "npm:react@^19.2.0": "19.2.0"
+    "npm:react@^19.2.0": "19.2.0",
+    "npm:sharp@~0.34.4": "0.34.4"
   },
   "jsr": {
     "@hono/hono@4.10.2": {
@@ -3373,7 +3375,8 @@
   "workspace": {
     "dependencies": [
       "npm:@astrojs/vercel@9",
-      "npm:astro@^5.15.1"
+      "npm:astro@^5.15.1",
+      "npm:sharp@~0.34.4"
     ],
     "members": {
       "api": {
