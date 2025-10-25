@@ -1,0 +1,1 @@
+deno run npm:astro@latest add tailwind

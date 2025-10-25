@@ -1,0 +1,18 @@
+{
+  "workspace": ["./web", "./api"],
+  "fmt": {
+    "lineWidth": 120,
+    "semicolons": false,
+    "singleQuote": true,
+    "useTabs": false
+  },
+  "tasks": {
+    "web": "deno task --cwd ./web dev",
+    "api": "deno task --cwd ./api dev"
+  },
+  "nodeModulesDir": "auto",
+  "imports": {
+    "@astrojs/vercel": "npm:@astrojs/vercel@^9.0.0",
+    "astro": "npm:astro@^5.15.1"
+  }
+}
