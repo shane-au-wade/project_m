@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/**/*.{j,t}s": {
-      "runtime": "vercel-deno@3.1.1"
-    }
-  }
-}
